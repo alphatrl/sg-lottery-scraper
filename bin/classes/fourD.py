@@ -14,13 +14,9 @@ class FourD:
         self.starterNo = None
         self.consolationNo= None
         self.region = None
-        self.url = None
 
 
     # Set methods
-    def set_url(self, url):
-        self.url = url
-
     def set_region(self, region):
         self.region = region
 
@@ -33,11 +29,10 @@ class FourD:
         print(self.starterNo)
         print(self.consolationNo)
         print(self.region)
-        print(self.url)
 
     # Scrap data from given url
-    def scrap_data(self):
-        fourD = urlopen(self.url)
+    def scrap_data(self, url):
+        fourD = urlopen(url)
         soup = BeautifulSoup(fourD, "html.parser")
 
         # Get date and convert to datetime

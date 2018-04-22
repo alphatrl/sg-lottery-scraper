@@ -13,13 +13,9 @@ class Toto:
         self.winningNo = []
         self.additionalNo = None
         self.region = None
-        self.url = None
 
 
     # Set methods
-    def set_url(self, url):
-        self.url = url
-
     def set_region(self, region):
         self.region = region
 
@@ -31,11 +27,10 @@ class Toto:
         print(self.winningNo)
         print(self.additionalNo)
         print(self.region)
-        print(self.url)
 
     # Scrap data from given url
-    def scrap_data(self):
-        fourD = urlopen(self.url)
+    def scrap_data(self, url):
+        fourD = urlopen(url)
         soup = BeautifulSoup(fourD, "html.parser")
 
         # Get date and convert to datetime

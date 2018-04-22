@@ -13,13 +13,11 @@ newToTo = Toto()
 
 
 # set and load 4D obj data
-newFourD.set_url(fourD_URL)
 newFourD.set_region("SG")
-newFourD.scrap_data()
+newFourD.scrap_data(fourD_URL)
 # newFourD.test_variables()
 
 # set and load TOTO obj data
-newToTo.set_url(toto_URL)
 newToTo.set_region("SG")
-newToTo.scrap_data()
+newToTo.scrap_data(toto_URL)
 # newToTo.test_variables()
