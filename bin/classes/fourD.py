@@ -1,28 +1,25 @@
 # import libraries
+from .lottery import Lottery
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from datetime import datetime
 import re
 
-class FourD:
+class FourD(Lottery):
 
     # Init a FourD obj
     def __init__(self):
-        self.date = None
-        self.drawNo = None
+        super().__init__()
         self.topThree = []
         self.starterNo = None
         self.consolationNo= None
-        self.region = None
 
     ## Test variable
     def test_variables(self):
-        print(self.date)
-        print(self.drawNo)
+        super().test_variables()
         print(self.topThree)
         print(self.starterNo)
         print(self.consolationNo)
-        print(self.region)
 
     # Scrap data from given url
     def scrap_data(self, url):
@@ -37,7 +34,7 @@ class FourD:
         drawNumberString = (soup.find(class_="drawNumber").text).split(" ")
         self.drawNo = drawNumberString[2]
 
-        # Get 4D Top3 Prize in a LIst
+        # Get 4D Top3 Prize in a List
         top3SoupList = soup.find_all(class_=re.compile("Prize"), limit=3)
         for i in range (len(top3SoupList)):
             self.topThree.append(top3SoupList[i].text)

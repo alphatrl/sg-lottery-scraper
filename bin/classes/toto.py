@@ -1,26 +1,23 @@
 # import libraries
+from .lottery import Lottery
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from datetime import datetime
 import re
 
-class Toto:
+class Toto(Lottery):
 
     # Init a Toto obj
     def __init__(self):
-        self.date = None
-        self.drawNo = None
+        super().__init__()
         self.winningNo = []
         self.additionalNo = None
-        self.region = None
 
     ## Test variable
     def test_variables(self):
-        print(self.date)
-        print(self.drawNo)
+        super().test_variables()
         print(self.winningNo)
         print(self.additionalNo)
-        print(self.region)
 
     # Scrap data from given url
     def scrap_data(self, url):

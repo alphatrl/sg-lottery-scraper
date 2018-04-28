@@ -18,7 +18,7 @@ newFourD.scrap_data(fourD_URL)
 newFourD.test_variables()
 
 # set and load TOTO obj data
-newToTo.set_region = "SG"
+newToTo.region = "SG"
 newToTo.scrap_data(toto_URL)
 newToTo.test_variables()
 
