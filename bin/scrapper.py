@@ -13,11 +13,13 @@ newToTo = Toto()
 
 
 # set and load 4D obj data
-newFourD.set_region("SG")
+newFourD.region = "SG"
 newFourD.scrap_data(fourD_URL)
-# newFourD.test_variables()
+newFourD.test_variables()
 
 # set and load TOTO obj data
-newToTo.set_region("SG")
+newToTo.set_region = "SG"
 newToTo.scrap_data(toto_URL)
-# newToTo.test_variables()
+newToTo.test_variables()
+
+# TODO scrapper to postgresql

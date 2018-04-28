@@ -15,12 +15,6 @@ class FourD:
         self.consolationNo= None
         self.region = None
 
-
-    # Set methods
-    def set_region(self, region):
-        self.region = region
-
-
     ## Test variable
     def test_variables(self):
         print(self.date)
