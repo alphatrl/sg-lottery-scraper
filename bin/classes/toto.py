@@ -26,7 +26,9 @@ class Toto(Lottery):
 
         # Get date and convert to datetime
         drawDate = soup.find(class_="drawDate").text
+        currentTime = datetime.now().time()
         self.date = datetime.strptime(drawDate, "%a, %d %b %Y")
+        self.date = self.date.replace(hour=currentTime.hour, minute=currentTime.minute, second=currentTime.second)
 
         # Get the draw number end of the string through .split()
         drawNumberString = (soup.find(class_="drawNumber").text).split(" ")
