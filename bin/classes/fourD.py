@@ -3,6 +3,7 @@ from .lottery import Lottery
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from datetime import datetime
+import psycopg2 
 import re
 
 class FourD(Lottery):
@@ -14,7 +15,7 @@ class FourD(Lottery):
         self.starterNo = None
         self.consolationNo= None
 
-    ## Test variable
+    # Test variable
     def test_variables(self):
         super().test_variables()
         print(self.topThree)
@@ -39,12 +40,22 @@ class FourD(Lottery):
         # Get 4D Top3 Prize in a List
         top3SoupList = soup.find_all(class_=re.compile("Prize"), limit=3)
         for i in range (len(top3SoupList)):
-            self.topThree.append(top3SoupList[i].text)
+            self.topThree.append(int(top3SoupList[i].text))
 
         # Get Starter Prizes
         starterList = soup.find(class_=re.compile("StarterPrize"))
-        self.starterNo = (starterList.text).replace("\n"," ").split()
+        starterNo_string = (starterList.text).replace("\n"," ").split()
+        # Convert string to int 
+        self.starterNo = [int(num_string) for num_string in starterNo_string]
 
         # Get Consolation Prizes
         consolationList = soup.find(class_=re.compile("ConsolationPrize"))
-        self.consolationNo = (consolationList.text).replace("\n"," ").split()
+        consolationNo_string = (consolationList.text).replace("\n"," ").split()
+        # Convert string to int 
+        self.consolationNo = [int(num_string) for num_string in consolationNo_string]
+
+    # receive cursor and execite the INSERT statement
+    def insert_to_database(self, cur):
+        sql_insert = "INSERT INTO \"FourDTable\" (date, \"drawNumber\", \"topThree\", \"starterNumber\", \"consolationNumber\", region) VALUES (%s, %s, %s, %s, %s, %s);"
+        # execute INSERT statement
+        cur.execute(sql_insert, (self.date, self.drawNo, self.topThree, self.starterNo, self.consolationNo, self.region,))
