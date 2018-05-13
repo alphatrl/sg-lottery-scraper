@@ -63,4 +63,5 @@ class FourD(Lottery):
                     ON CONFLICT (draw_number)
                     DO UPDATE SET date_modified = %s;"""
         # execute INSERT statement
-        cur.execute(sql, (self.date, self.drawNo, self.topThree, self.starterNo, self.consolationNo, self.region, self.dateModified, self.dateModified,))
+        cur.execute(sql, (self.date, self.drawNo, self.topThree, self.starterNo, self.consolationNo, self.region, 
+            self.dateModified, self.dateModified,))

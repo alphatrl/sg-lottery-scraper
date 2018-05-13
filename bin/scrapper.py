@@ -37,6 +37,8 @@ try:
     cur = conn.cursor()
     # insert fourD to database
     newFourD.insert_into_database(cur)
+    # insert toto to database
+    newToTo.insert_into_database(cur)
     # commit changes to database
     conn.commit()
     # close communication with database
