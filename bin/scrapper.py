@@ -36,7 +36,7 @@ try:
     # create a new cursor
     cur = conn.cursor()
     # insert fourD to database
-    newFourD.insert_to_database(cur)
+    newFourD.insert_into_database(cur)
     # commit changes to database
     conn.commit()
     # close communication with database

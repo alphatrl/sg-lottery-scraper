@@ -54,8 +54,14 @@ class FourD(Lottery):
         # Convert string to int 
         self.consolationNo = [int(num_string) for num_string in consolationNo_string]
 
-    # receive cursor and execite the INSERT statement
-    def insert_to_database(self, cur):
-        sql_insert = "INSERT INTO \"FourDTable\" (date, \"drawNumber\", \"topThree\", \"starterNumber\", \"consolationNumber\", region) VALUES (%s, %s, %s, %s, %s, %s);"
+    # receive cursor and execute the INSERT statement
+    # If drawNo scrapped CONFLICT with drawNo in database, 
+    # UPDATE the date only
+    def insert_into_database(self, cur):
+        sql = """INSERT INTO \"FourDTable\" 
+                    (date, \"drawNumber\", \"topThree\", \"starterNumber\", \"consolationNumber\", region) 
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (\"drawNumber\")
+                    DO UPDATE SET date = %s;"""
         # execute INSERT statement
-        cur.execute(sql_insert, (self.date, self.drawNo, self.topThree, self.starterNo, self.consolationNo, self.region,))
+        cur.execute(sql, (self.date, self.drawNo, self.topThree, self.starterNo, self.consolationNo, self.region, self.date,))
