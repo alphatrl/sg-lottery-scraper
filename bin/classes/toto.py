@@ -26,9 +26,8 @@ class Toto(Lottery):
 
         # Get date and convert to datetime
         drawDate = soup.find(class_="drawDate").text
-        currentTime = datetime.now().time()
+        self.dateModified = datetime.now()
         self.date = datetime.strptime(drawDate, "%a, %d %b %Y")
-        self.date = self.date.replace(hour=currentTime.hour, minute=currentTime.minute, second=currentTime.second)
 
         # Get the draw number end of the string through .split()
         drawNumberString = (soup.find(class_="drawNumber").text).split(" ")
@@ -41,3 +40,17 @@ class Toto(Lottery):
 
         # Get Additional No.
         self.additionalNo = soup.find(class_=re.compile("additional")).text
+
+        # receive cursor and execute the INSERT statement
+    
+    # If drawNo scrapped CONFLICT with drawNo in database, 
+    # UPDATE the date only
+
+    def insert_into_database(self, cur):
+        sql = """INSERT INTO \"FourDTable\" 
+                    (date, \"drawNumber\", \"topThree\", \"starterNumber\", \"consolationNumber\", region) 
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (\"drawNumber\")
+                    DO UPDATE SET date = %s;"""
+        # execute INSERT statement
+        cur.execute(sql, (self.date, self.drawNo, self.topThree, self.starterNo, self.consolationNo, self.region, self.date,))

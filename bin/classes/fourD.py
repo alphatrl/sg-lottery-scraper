@@ -29,9 +29,8 @@ class FourD(Lottery):
 
         # Get date and convert to datetime
         drawDate = soup.find(class_="drawDate").text
-        currentTime = datetime.now().time()
+        self.dateModified = datetime.now()
         self.date = datetime.strptime(drawDate, "%a, %d %b %Y")
-        self.date = self.date.replace(hour=currentTime.hour, minute=currentTime.minute, second=currentTime.second)
 
         # Get the number end of the string through .split()
         drawNumberString = (soup.find(class_="drawNumber").text).split(" ")
@@ -59,9 +58,9 @@ class FourD(Lottery):
     # UPDATE the date only
     def insert_into_database(self, cur):
         sql = """INSERT INTO \"FourDTable\" 
-                    (date, \"drawNumber\", \"topThree\", \"starterNumber\", \"consolationNumber\", region) 
-                    VALUES (%s, %s, %s, %s, %s, %s)
-                    ON CONFLICT (\"drawNumber\")
-                    DO UPDATE SET date = %s;"""
+                    (date, draw_number, top_three, starter_number, consolation_number, region, date_modified) 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (draw_number)
+                    DO UPDATE SET date_modified = %s;"""
         # execute INSERT statement
-        cur.execute(sql, (self.date, self.drawNo, self.topThree, self.starterNo, self.consolationNo, self.region, self.date,))
+        cur.execute(sql, (self.date, self.drawNo, self.topThree, self.starterNo, self.consolationNo, self.region, self.dateModified, self.dateModified,))
