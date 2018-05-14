@@ -11,9 +11,11 @@ class Lottery:
         self.date = None
         self.drawNo = None
         self.region = None
+        self.dateModified = None
 
     ## Test variable
     def test_variables(self):
         print(self.date)
         print(self.drawNo)
         print(self.region)
+        print(self.dateModified)

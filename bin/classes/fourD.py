@@ -3,6 +3,7 @@ from .lottery import Lottery
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from datetime import datetime
+import psycopg2 
 import re
 
 class FourD(Lottery):
@@ -14,7 +15,7 @@ class FourD(Lottery):
         self.starterNo = None
         self.consolationNo= None
 
-    ## Test variable
+    # Test variable
     def test_variables(self):
         super().test_variables()
         print(self.topThree)
@@ -28,6 +29,7 @@ class FourD(Lottery):
 
         # Get date and convert to datetime
         drawDate = soup.find(class_="drawDate").text
+        self.dateModified = datetime.now()
         self.date = datetime.strptime(drawDate, "%a, %d %b %Y")
 
         # Get the number end of the string through .split()
@@ -37,12 +39,29 @@ class FourD(Lottery):
         # Get 4D Top3 Prize in a List
         top3SoupList = soup.find_all(class_=re.compile("Prize"), limit=3)
         for i in range (len(top3SoupList)):
-            self.topThree.append(top3SoupList[i].text)
+            self.topThree.append(int(top3SoupList[i].text))
 
         # Get Starter Prizes
         starterList = soup.find(class_=re.compile("StarterPrize"))
-        self.starterNo = (starterList.text).replace("\n"," ").split()
+        starterNo_string = (starterList.text).replace("\n"," ").split()
+        # Convert string to int 
+        self.starterNo = [int(num_string) for num_string in starterNo_string]
 
         # Get Consolation Prizes
         consolationList = soup.find(class_=re.compile("ConsolationPrize"))
-        self.consolationNo = (consolationList.text).replace("\n"," ").split()
+        consolationNo_string = (consolationList.text).replace("\n"," ").split()
+        # Convert string to int 
+        self.consolationNo = [int(num_string) for num_string in consolationNo_string]
+
+    # receive cursor and execute the INSERT statement
+    # If drawNo scrapped CONFLICT with drawNo in database, 
+    # UPDATE the date only
+    def insert_into_database(self, cur):
+        sql = """INSERT INTO \"FourDTable\" 
+                    (date, draw_number, top_three, starter_number, consolation_number, region, date_modified) 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (draw_number)
+                    DO UPDATE SET date_modified = %s;"""
+        # execute INSERT statement
+        cur.execute(sql, (self.date, self.drawNo, self.topThree, self.starterNo, self.consolationNo, self.region, 
+            self.dateModified, self.dateModified,))

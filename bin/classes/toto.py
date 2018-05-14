@@ -26,6 +26,7 @@ class Toto(Lottery):
 
         # Get date and convert to datetime
         drawDate = soup.find(class_="drawDate").text
+        self.dateModified = datetime.now()
         self.date = datetime.strptime(drawDate, "%a, %d %b %Y")
 
         # Get the draw number end of the string through .split()
@@ -34,8 +35,28 @@ class Toto(Lottery):
 
         # Get the Winning No. in a list
         winningSoupList = soup.find_all(class_=re.compile("win"), limit=6)
+        winningNo_string = []
         for i in range (len(winningSoupList)):
-            self.winningNo.append(winningSoupList[i].text)
+            winningNo_string.append(winningSoupList[i].text)
+        # Convert string to int 
+        self.winningNo = [int(num_string) for num_string in winningNo_string]
 
         # Get Additional No.
         self.additionalNo = soup.find(class_=re.compile("additional")).text
+
+        # receive cursor and execute the INSERT statement
+    
+    # If drawNo scrapped CONFLICT with drawNo in database, 
+    # UPDATE the modified_date and numbers only
+    def insert_into_database(self, cur):
+        sql = """INSERT INTO \"TotoTable\" 
+                    (date, draw_number, winning_number, additional_number, region, date_modified) 
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (draw_number)
+                    DO UPDATE SET 
+                        date_modified = %s,
+                        winning_number = %s,
+                        additional_number = %s;"""
+        # execute INSERT statement
+        cur.execute(sql, (self.date, self.drawNo, self.winningNo, self.additionalNo, self.region, 
+            self.dateModified, self.dateModified, self.winningNo, self.additionalNo,))
