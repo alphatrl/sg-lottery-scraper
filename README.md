@@ -1,6 +1,7 @@
 # Singapore Lottery Results Scrapper
 
 This scrapes the lottery results from Singapore Pools using Python 3 and stores in a PostgreSQL database
+(Singapore Pool url not included)
 
 ## Motivation
 
@@ -15,4 +16,6 @@ To turn this app to a reality, we would first need to scrap and store the lotter
 
 ## Installation
 
-(Coming Soon)
+1. Using `pg_restore`, create a PostgreSQL database using the script in `/script/create-db-sg-lottery.sql`
+
+(TBC...)
