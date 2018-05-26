@@ -6,7 +6,6 @@ import psycopg2
 import os
 import settings
 
-
 # create 4D and ToTo objects
 fourD_URL = os.getenv("FOUR_D_URL")
 toto_URL = os.getenv("TOTO_URL")
