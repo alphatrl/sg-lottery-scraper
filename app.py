@@ -11,8 +11,10 @@ from psycopg2.extras import RealDictCursor
 
 app = Flask(__name__)
 
-database_host = os.getenv("DATABASE_URL")
-database_name = os.getenv("DATABASE_NAME")
+db_host = os.getenv("DATABASE_URL")
+db_name = os.getenv("DATABASE_NAME")
+db_user = os.getenv("DATABASE_USER")
+db_password = os.getenv("DATABASE_PASSWORD")
 
 # handle datetime for python to json
 def datetime_handler(x):
@@ -22,7 +24,7 @@ def datetime_handler(x):
 
 try:
     # connect to PostgreSQL database
-    conn = psycopg2.connect(host=database_host,database=database_name)
+    conn = psycopg2.connect(host=db_host, database=db_name, user=db_user, password=db_password)
     cur = conn.cursor(cursor_factory=RealDictCursor)
 
 except (Exception, psycopg2.DatabaseError) as error:

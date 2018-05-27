@@ -24,14 +24,16 @@ newToTo.scrap_data(toto_URL)
 newToTo.test_variables()
 
 # TODO scrapper to postgresql
-database_host = os.getenv("DATABASE_URL")
-database_name = os.getenv("DATABASE_NAME")
+db_host = os.getenv("DATABASE_URL")
+db_name = os.getenv("DATABASE_NAME")
+db_user = os.getenv("DATABASE_USER")
+db_password = os.getenv("DATABASE_PASSWORD")
 
 # Connect to database
 conn = None
 try:
     # connect to PostgreSQL database
-    conn = psycopg2.connect(host=database_host,database=database_name)
+    conn = psycopg2.connect(host=db_host, database=db_name, user=db_user, password=db_password)
     # create a new cursor
     cur = conn.cursor()
     # insert fourD to database
