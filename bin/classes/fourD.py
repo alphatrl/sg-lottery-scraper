@@ -58,10 +58,10 @@ class FourD(Lottery):
     # UPDATE the date only
     def insert_into_database(self, cur):
         sql = """INSERT INTO \"FourDTable\" 
-                    (date, draw_number, top_three, starter_number, consolation_number, region, date_modified) 
+                    (date, draw_number, top_three, starter_number, consolation_number, operator, date_modified) 
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
                     ON CONFLICT (draw_number)
                     DO UPDATE SET date_modified = %s;"""
         # execute INSERT statement
-        cur.execute(sql, (self.date, self.drawNo, self.topThree, self.starterNo, self.consolationNo, self.region, 
+        cur.execute(sql, (self.date, self.drawNo, self.topThree, self.starterNo, self.consolationNo, self.operator, 
             self.dateModified, self.dateModified,))

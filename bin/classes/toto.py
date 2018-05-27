@@ -50,7 +50,7 @@ class Toto(Lottery):
     # UPDATE the modified_date and numbers only
     def insert_into_database(self, cur):
         sql = """INSERT INTO \"TotoTable\" 
-                    (date, draw_number, winning_number, additional_number, region, date_modified) 
+                    (date, draw_number, winning_number, additional_number, operator, date_modified) 
                     VALUES (%s, %s, %s, %s, %s, %s)
                     ON CONFLICT (draw_number)
                     DO UPDATE SET 
@@ -58,5 +58,5 @@ class Toto(Lottery):
                         winning_number = %s,
                         additional_number = %s;"""
         # execute INSERT statement
-        cur.execute(sql, (self.date, self.drawNo, self.winningNo, self.additionalNo, self.region, 
+        cur.execute(sql, (self.date, self.drawNo, self.winningNo, self.additionalNo, self.operator, 
             self.dateModified, self.dateModified, self.winningNo, self.additionalNo,))
