@@ -29,7 +29,7 @@ except (Exception, psycopg2.DatabaseError) as error:
     print(error)
     # panic out
 
-# pass a json containing all the 4D records
+# pass a JSON containing all the 4D records
 @app.route('/api/4d/')
 def get_all_four_D():
  sql = "SELECT * FROM \"FourDTable\""
@@ -41,6 +41,23 @@ def get_all_four_D():
 @app.route('/api/4d/latest')
 def get_latest_four_D():
  sql = """SELECT * FROM \"FourDTable\"
+            ORDER BY draw_number DESC"""
+ cur.execute(sql)
+ 
+ return json.dumps(cur.fetchone(), default=datetime_handler)
+
+# pass a JSON containing all the TOTO records
+@app.route('/api/toto/')
+def get_all_toto():
+ sql = "SELECT * FROM \"TotoTable\""
+ cur.execute(sql)
+ 
+ return json.dumps(cur.fetchall(), default=datetime_handler)
+
+# pass a JSON containing the latest Toto results
+@app.route('/api/toto/latest')
+def get_latest_totoD():
+ sql = """SELECT * FROM \"TotoTable\"
             ORDER BY draw_number DESC"""
  cur.execute(sql)
  
