@@ -44,7 +44,7 @@ CREATE TABLE public."FourDTable" (
     top_three integer[],
     starter_number integer[],
     consolation_number integer[],
-    region text,
+    operator text,
     date_modified timestamp without time zone
 );
 
@@ -79,7 +79,7 @@ CREATE TABLE public."TotoTable" (
     draw_number integer,
     winning_number integer[],
     additional_number integer,
-    region text,
+    operator text,
     date_modified timestamp without time zone
 );
 
