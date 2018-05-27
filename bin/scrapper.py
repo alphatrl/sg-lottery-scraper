@@ -11,15 +11,15 @@ fourD_URL = os.getenv("FOUR_D_URL")
 toto_URL = os.getenv("TOTO_URL")
 newFourD = FourD()
 newToTo = Toto()
-
+sg_operator = os.getenv("SG_OPERATOR")
 
 # set and load 4D obj data
-newFourD.region = "SG"
+newFourD.operator = sg_operator
 newFourD.scrap_data(fourD_URL)
 newFourD.test_variables()
 
 # set and load TOTO obj data
-newToTo.region = "SG"
+newToTo.operator = sg_operator
 newToTo.scrap_data(toto_URL)
 newToTo.test_variables()
 
