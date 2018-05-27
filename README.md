@@ -16,6 +16,6 @@ To turn this app to a reality, we would first need to scrap and store the lotter
 
 ## Installation
 
-1. Using `pg_restore`, create a PostgreSQL database using the script in `/script/create-db-sg-lottery.sql`
+1. Using `pg_restore`, create a PostgreSQL database using the script in `/script/sg-lottery-db-template.sql`
 
 (TBC...)
