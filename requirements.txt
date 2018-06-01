@@ -1,5 +1,6 @@
-psycopg2_binary==2.7.4
 Flask==1.0
+psycopg2_binary==2.7.4
 beautifulsoup4==4.6.0
 python-dotenv==0.8.2
 psycopg2==2.7.4
+gunicorn
