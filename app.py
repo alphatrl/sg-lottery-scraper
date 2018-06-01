@@ -64,3 +64,6 @@ def get_latest_totoD():
  cur.execute(sql)
  
  return json.dumps(cur.fetchone(), default=datetime_handler)
+
+ if __name__ == '__main__':
+    app.run(port=os.getenv("PORT"))
