@@ -41,8 +41,9 @@ class Toto(Lottery):
         # Convert string to int 
         self.winningNo = [int(num_string) for num_string in winningNo_string]
 
-        # Get Additional No.
-        self.additionalNo = soup.find(class_=re.compile("additional")).text
+        # Get Additional No. in a list
+        self.additionalNo = [];
+        self.additionalNo.append(int(soup.find(class_=re.compile("additional")).text))
 
         # receive cursor and execute the INSERT statement
     

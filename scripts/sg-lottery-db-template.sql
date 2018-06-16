@@ -25,7 +25,7 @@ SET default_with_oids = false;
 
 CREATE TABLE public."FourDTable" (
     id integer NOT NULL,
-    date timestamp without time zone,
+    date_drawn timestamp without time zone,
     draw_number integer,
     top_three integer[],
     starter_number integer[],
@@ -61,10 +61,10 @@ ALTER SEQUENCE public."FourDTable_id_seq" OWNED BY public."FourDTable".id;
 
 CREATE TABLE public."TotoTable" (
     id integer NOT NULL,
-    date timestamp without time zone,
+    date_drawn timestamp without time zone,
     draw_number integer,
     winning_number integer[],
-    additional_number integer,
+    additional_number integer[],
     operator text,
     date_modified timestamp without time zone
 );
