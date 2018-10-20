@@ -6,12 +6,12 @@ This scrapes the lottery results from Singapore Pools using Python 3 and stores 
 ## Table of Contents
 
 * [Motivation](#motivation)
-* [Pre-requisites](#Pre-requisites)
-* [Installation](#Installation)
-* [Database Columns Description](#Database_Columns_Description)
-    * [FourDTable](#FourDTable)
-    * [TotoTable](#TotoTable)
-* [License](#LICENSE)
+* [Pre-requisites](#pre-requisites)
+* [Installation](#installation)
+* [Database Columns Description](#database-columns-description)
+  * [FourDTable](#fourdtable)
+  * [TotoTable](#tototable)
+* [License](#license)
 
 ## Motivation
 
