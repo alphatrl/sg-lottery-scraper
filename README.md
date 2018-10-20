@@ -6,6 +6,7 @@ This scrapes the lottery results from Singapore Pools using Python 3 and stores 
 ## Table of Contents
 
 * [Motivation](#motivation)
+* [Try It](#try-it)
 * [Pre-requisites](#pre-requisites)
 * [Installation](#installation)
 * [Database Columns Description](#database-columns-description)
@@ -18,6 +19,10 @@ This scrapes the lottery results from Singapore Pools using Python 3 and stores 
 I saw my grandparents downloading a Lottery Results app and I realised that the UI sucks. So I thought to myself, it is possible to design a lottery results app which look good?
 
 This provides a json file containing the latest results scrapped from Singapore Pools
+
+## Try It
+
+* [Web](http://sglotto.netlify.com)
 
 ## Pre-requisites
 
