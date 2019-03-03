@@ -17,7 +17,7 @@ class Sweep(Lottery):
         self.giftPrize = []
         self.consolationPrize = []
         self.participationPrize = []
-        self.twoD = []
+        self.twoDPrize = []
 
     # Test variable
     def test_variables(self):
@@ -28,7 +28,7 @@ class Sweep(Lottery):
         print(self.giftPrize)
         print(self.consolationPrize)
         print(self.participationPrize)
-        print(self.twoD)
+        print(self.twoDPrize)
 
 
     # Scrap data from given url
@@ -82,20 +82,22 @@ class Sweep(Lottery):
         for i in range (len(participationList)):
             self.participationPrize.append(int(participationList[i].text))
 
-        # Get Participation Prizes
+        # Get 2D Prizes
         twoDList = sweepList[6].find_all('li') # find all li in the list 7th pos
         for i in range (len(twoDList)):
-            self.twoD.append(int(twoDList[i].text))
+            self.twoDPrize.append(int(twoDList[i].text))
 
     # receive cursor and execute the INSERT statement
     # If drawNo scrapped CONFLICT with drawNo in database, 
     # UPDATE the date only
     def insert_into_database(self, cur):
-        sql = """INSERT INTO \"FourDTable\" 
-                    (date_drawn, draw_number, top_three, starter_number, consolation_number, operator, date_modified) 
-                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+        sql = """INSERT INTO \"SweepTable\" 
+                    (date_drawn, draw_number, top_three, jackpot_prize, lucky_prize, gift_prize,
+                        consolation_prize, part_prize, twoD_prize, operator, date_modified) 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     ON CONFLICT (draw_number)
                     DO UPDATE SET date_modified = %s;"""
         # execute INSERT statement
-        cur.execute(sql, (self.date, self.drawNo, self.topThree, self.starterNo, self.consolationNo, self.operator, 
-            self.dateModified, self.dateModified,))
+        cur.execute(sql, (self.date, self.drawNo, self.topThree, self.jackpotPrize, self.luckyPrize,
+            self.giftPrize, self.consolationPrize, self.giftPrize, self.twoDPrize,
+            self.operator, self.dateModified, self.dateModified,))

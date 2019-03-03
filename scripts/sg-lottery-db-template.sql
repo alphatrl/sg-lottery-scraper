@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 10.4
--- Dumped by pg_dump version 10.4
+-- Dumped from database version 10.7
+-- Dumped by pg_dump version 10.7
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -14,9 +14,7 @@ SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
-
 SET default_tablespace = '';
-
 SET default_with_oids = false;
 
 --
@@ -91,6 +89,34 @@ ALTER SEQUENCE public."TotoTable_id_seq" OWNED BY public."TotoTable".id;
 
 
 --
+-- Name: SweepTable; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public."SweepTable_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+CREATE TABLE public."SweepTable" (
+    id integer DEFAULT nextval('public."SweepTable_id_seq"'::regclass) NOT NULL,
+    date_drawn timestamp without time zone,
+    draw_number integer,
+    top_three integer[],
+    jackpot_prize integer[],
+    lucky_prize integer[],
+    gift_prize integer[],
+    consolation_prize integer[],
+    part_prize integer[],
+    twod_prize integer[],
+    operator text,
+    date_modified timestamp without time zone
+);
+
+
+--
 -- Name: FourDTable id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -108,14 +134,21 @@ ALTER TABLE ONLY public."TotoTable" ALTER COLUMN id SET DEFAULT nextval('public.
 -- Name: FourDTable_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public."FourDTable_id_seq"', 17, true);
+SELECT pg_catalog.setval('public."FourDTable_id_seq"', 1, true);
+
+
+--
+-- Name: SweepTable_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public."SweepTable_id_seq"', 1, false);
 
 
 --
 -- Name: TotoTable_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public."TotoTable_id_seq"', 6, true);
+SELECT pg_catalog.setval('public."TotoTable_id_seq"', 1, true);
 
 
 --
@@ -132,6 +165,22 @@ ALTER TABLE ONLY public."FourDTable"
 
 ALTER TABLE ONLY public."FourDTable"
     ADD CONSTRAINT "FourDTable_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: SweepTable SweepTable_draw_number_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."SweepTable"
+    ADD CONSTRAINT "SweepTable_draw_number_key" UNIQUE (draw_number);
+
+
+--
+-- Name: SweepTable SweepTable_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."SweepTable"
+    ADD CONSTRAINT "SweepTable_pkey" PRIMARY KEY (id);
 
 
 --
