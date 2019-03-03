@@ -38,8 +38,6 @@ except (Exception, psycopg2.DatabaseError) as error:
   # panic out
 
 # pass a JSON containing all the 4D records
-
-
 @app.route('/api/4d/')
 def get_all_four_D():
   sql = "SELECT * FROM \"FourDTable\""
@@ -48,8 +46,6 @@ def get_all_four_D():
   return json.dumps(cur.fetchall(), default=datetime_handler)
 
 # pass a JSON containing the latest 4D results
-
-
 @app.route('/api/4d/latest')
 def get_latest_four_D():
   sql = """SELECT * FROM \"FourDTable\"
@@ -58,9 +54,8 @@ def get_latest_four_D():
 
   return json.dumps(cur.fetchone(), default=datetime_handler)
 
+
 # pass a JSON containing all the TOTO records
-
-
 @app.route('/api/toto/')
 def get_all_toto():
   sql = "SELECT * FROM \"TotoTable\""
@@ -69,11 +64,27 @@ def get_all_toto():
   return json.dumps(cur.fetchall(), default=datetime_handler)
 
 # pass a JSON containing the latest Toto results
-
-
 @app.route('/api/toto/latest')
-def get_latest_totoD():
+def get_latest_toto():
   sql = """SELECT * FROM \"TotoTable\"
+          ORDER BY draw_number DESC"""
+  cur.execute(sql)
+
+  return json.dumps(cur.fetchone(), default=datetime_handler)
+
+
+# pass a JSON containing all the SWEEP records
+@app.route('/api/sweep/')
+def get_all_sweep():
+  sql = "SELECT * FROM \"SweepTable\""
+  cur.execute(sql)
+
+  return json.dumps(cur.fetchall(), default=datetime_handler)
+
+# pass a JSON containing the latest Sweep results
+@app.route('/api/sweep/latest')
+def get_latest_sweep():
+  sql = """SELECT * FROM \"SweepTable\"
           ORDER BY draw_number DESC"""
   cur.execute(sql)
 
