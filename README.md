@@ -22,7 +22,7 @@ This provides a json file containing the latest results scrapped from Singapore 
 
 ## Try It
 
-* [Web](http://sglotto.netlify.com)
+* [Web](http://sghuat.netlify.com)
 
 ## Pre-requisites
 
