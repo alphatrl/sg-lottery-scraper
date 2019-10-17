@@ -90,6 +90,30 @@ def get_latest_sweep():
 
   return json.dumps(cur.fetchone(), default=datetime_handler)
 
+  # pass a JSON containing the latest results (4D, TOTO, Sweep)
+@app.route('/api/latest')
+def get_latest():
+  # declare dictionary
+  json_data = {}
+
+  sql_fourd = """SELECT * FROM \"FourDTable\"
+          ORDER BY draw_number DESC"""
+  sql_toto = """SELECT * FROM \"TotoTable\"
+          ORDER BY draw_number DESC"""
+  sql_sweep = """SELECT * FROM \"SweepTable\"
+        ORDER BY draw_number DESC"""
+
+  cur.execute(sql_fourd)
+  json_data["fourD"] = cur.fetchone()
+
+  cur.execute(sql_toto)
+  json_data["toto"] = cur.fetchone()
+
+  cur.execute(sql_sweep)
+  json_data["sweep"] = cur.fetchone()
+  
+  return json.dumps(json_data, default=datetime_handler)
+
 
 if __name__ == '__main__':
   app.run(port=os.getenv("PORT"))
