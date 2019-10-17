@@ -19,17 +19,20 @@ sg_operator = os.getenv("SG_OPERATOR")
 # set and load 4D obj data
 newFourD.operator = sg_operator
 newFourD.scrap_data(fourD_URL)
-newFourD.test_variables()
 
 # set and load TOTO obj data
 newToTo.operator = sg_operator
 newToTo.scrap_data(toto_URL)
-newToTo.test_variables()
 
 # set and load SWEEP obj data
 newSweep.operator = sg_operator
 newSweep.scrap_data(sweep_URL)
-newSweep.test_variables()
+
+# test variable
+# newFourD.test_variables()
+# newToTo.test_variables()
+# newSweep.test_variables()
+
 
 db_host = os.getenv("DATABASE_HOST")
 db_name = os.getenv("DATABASE_NAME")
