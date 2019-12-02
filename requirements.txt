@@ -1,7 +1,0 @@
-Flask==1.0.2
-Flask_Cors==3.0.7
-psycopg2_binary==2.7.7
-beautifulsoup4==4.7.1
-python-dotenv==0.10.1
-psycopg2==2.7.7
-gunicorn==19.9.0
