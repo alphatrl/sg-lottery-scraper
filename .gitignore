@@ -148,3 +148,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Temp
+temp
