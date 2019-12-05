@@ -1,6 +1,9 @@
 import puppeteer from 'puppeteer'
+
 import fs from 'fs'
 import path from 'path'
+import  { spawnSync } from 'child_process'
+
 import fourD from './lib/fourD.js'
 import toto from './lib/toto.js'
 import sweep from './lib/sweep.js'
@@ -34,6 +37,21 @@ const main = async () => {
 
   await browser.close()
 
+  if (process.env.GITHUB_TOKEN) {
+    spawnSync(
+      'dpl',
+      [
+        '--provider=pages',
+        '--committer-from-gh',
+        `--github-token=${process.env.GITHUB_TOKEN}`,
+        `--repo==${process.env.GITHUB_REPO}`,
+        '--local-dir=temp',
+      ],
+      {
+        stdio: 'inherit',
+      }
+    )
+  }
 
 
   return null
