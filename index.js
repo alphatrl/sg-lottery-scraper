@@ -27,11 +27,17 @@ const main = async () => {
     args: isProduction ? ['--no-sandbox'] : [],
   })
 
-  var sgLottery =  {
-    FourD: await fourD(browser),
-    Toto: await toto(browser),
-    Sweep: await sweep(browser)
-  }
+  var results =  [ fourD(browser), toto(browser), sweep(browser) ]
+  
+  var sgLottery = await Promise.all(results)
+    .then((values) => {
+      return {
+        FourD: values[0],
+        Toto: values[1],
+        Sweep: values[2]
+      }
+    })
+    .catch((error) => console.error(error))
 
   fs.writeFileSync(filename, JSON.stringify(sgLottery, null, isProduction ? 0 : 2))
 
@@ -44,7 +50,7 @@ const main = async () => {
         '--provider=pages',
         '--committer-from-gh',
         `--github-token=${process.env.GITHUB_TOKEN}`,
-        `--repo==${process.env.GITHUB_REPO}`,
+        `--repo=${process.env.GITHUB_REPO}`,
         '--local-dir=temp',
       ],
       {
