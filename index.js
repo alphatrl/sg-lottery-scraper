@@ -44,7 +44,7 @@ const main = async () => {
         '--provider=pages',
         '--committer-from-gh',
         `--github-token=${process.env.GITHUB_TOKEN}`,
-        `--repo==${process.env.GITHUB_REPO}`,
+        `--repo=${process.env.GITHUB_REPO}`,
         '--local-dir=temp',
       ],
       {
