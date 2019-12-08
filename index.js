@@ -27,8 +27,6 @@ const main = async () => {
     args: isProduction ? ['--no-sandbox'] : [],
   })
 
-  var sgLottery = {}
-
   var results =  [ fourD(browser), toto(browser), sweep(browser) ]
   
   var sgLottery = await Promise.all(results)
@@ -39,11 +37,11 @@ const main = async () => {
         Sweep: values[2]
       }
     })
+    .catch((error) => console.error(error))
 
   fs.writeFileSync(filename, JSON.stringify(sgLottery, null, isProduction ? 0 : 2))
 
   await browser.close()
-  console.log(sgLottery)
 
   if (process.env.GITHUB_TOKEN) {
     spawnSync(
