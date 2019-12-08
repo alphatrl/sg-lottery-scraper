@@ -27,11 +27,18 @@ const main = async () => {
     args: isProduction ? ['--no-sandbox'] : [],
   })
 
-  var sgLottery =  {
-    FourD: await fourD(browser),
-    Toto: await toto(browser),
-    Sweep: await sweep(browser)
-  }
+  var sgLottery = {}
+
+  var results =  [ fourD(browser), toto(browser), sweep(browser) ]
+  
+  var sgLottery = await Promise.all(results)
+    .then((values) => {
+      return {
+        FourD: values[0],
+        Toto: values[1],
+        Sweep: values[2]
+      }
+    })
 
   fs.writeFileSync(filename, JSON.stringify(sgLottery, null, isProduction ? 0 : 2))
 
