@@ -36,6 +36,7 @@ const main = async () => {
   fs.writeFileSync(filename, JSON.stringify(sgLottery, null, isProduction ? 0 : 2))
 
   await browser.close()
+  console.log(sgLottery)
 
   if (process.env.GITHUB_TOKEN) {
     spawnSync(
