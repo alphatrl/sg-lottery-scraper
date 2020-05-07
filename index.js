@@ -4,9 +4,7 @@ import fs from 'fs'
 import path from 'path'
 import  { spawnSync } from 'child_process'
 
-import fourD from './lib/fourD.js'
-import toto from './lib/toto.js'
-import sweep from './lib/sweep.js'
+import getLottery from './lib/getLottery.js';
 
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -17,31 +15,24 @@ if (!fs.existsSync('temp')) {
 
 const main = async () => {
 
+  var oldList = {}
+
   const filename = path.join('temp', 'sglottery.json')
   if (fs.existsSync(filename)) {
+    oldList = JSON.parse(fs.readFileSync(filename, 'utf8'));
     fs.unlinkSync(filename)
   }
-  
+
   const browser = await puppeteer.launch({
     headless: isProduction,
     args: isProduction ? ['--no-sandbox'] : [],
   })
-
-  var results =  [ fourD(browser), toto(browser), sweep(browser) ]
   
-  var sgLottery = await Promise.all(results)
-    .then((values) => {
-      return {
-        FourD: values[0],
-        Toto: values[1],
-        Sweep: values[2]
-      }
-    })
-    .catch((error) => console.error(error))
+  var sgLottery = await getLottery(browser, oldList);
 
   fs.writeFileSync(filename, JSON.stringify(sgLottery, null, isProduction ? 0 : 2))
 
-  await browser.close()
+  await browser.close();
 
   if (process.env.GITHUB_TOKEN) {
     spawnSync(
@@ -58,7 +49,6 @@ const main = async () => {
       }
     )
   }
-
 
   return null
 }
