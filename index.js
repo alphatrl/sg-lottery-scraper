@@ -35,7 +35,7 @@ const main = async () => {
 
   await browser.close();
 
-  if (process.env.GITHUB_TOKEN) {
+  if (process.env.GITHUB_TOKEN && sgLottery !== undefined) {
     spawnSync(
       'dpl',
       [
