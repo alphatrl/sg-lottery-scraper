@@ -4,8 +4,9 @@ import fs from 'fs'
 import path from 'path'
 import  { spawnSync } from 'child_process'
 
-import firebase from './lib/firebase_push.js';
 import getLottery from './lib/getLottery.js';
+import getLotteryTest from './lib/getLotteryTest.js';
+
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -28,11 +29,11 @@ const main = async () => {
     args: isProduction ? ['--no-sandbox'] : [],
   })
   
-  var sgLottery = await getLottery(browser, oldList)
+  var sgLottery = isProduction ? await getLottery(browser, oldList) : await getLotteryTest(browser, oldList);
 
-  fs.writeFileSync(filename, JSON.stringify(sgLottery, null, isProduction ? 0 : 2))
+  fs.writeFileSync(filename, JSON.stringify(sgLottery, null, isProduction ? 0 : 2));
 
-  await browser.close().then(firebase.exit());
+  await browser.close();
 
   if (process.env.GITHUB_TOKEN) {
     spawnSync(
