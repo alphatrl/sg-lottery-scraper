@@ -4,13 +4,16 @@
   "main": "index.js",
   "type": "module",
   "engines": {
-    "node": "13.2.0"
+    "node": "14.6.0"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "start-dev": "node -r dotenv/config index.js dotenv_config_path=.env"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
     "eslint": "^6.7.1",
+    "firebase-admin": "^8.12.0",
     "global": "^4.4.0",
     "puppeteer": "^2.0.0"
   }
