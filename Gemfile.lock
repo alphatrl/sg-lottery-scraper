@@ -3,9 +3,9 @@ GEM
   specs:
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
-    dpl (1.10.14)
-    dpl-pages (1.10.14)
-      dpl (= 1.10.14)
+    dpl (1.10.15)
+    dpl-pages (1.10.15)
+      dpl (= 1.10.15)
       faraday (< 0.16.0)
       octokit (~> 4.6.2)
       public_suffix (< 3.1.0)
@@ -30,4 +30,4 @@ RUBY VERSION
    ruby 2.6.5p114
 
 BUNDLED WITH
-   1.17.2
+   2.1.4

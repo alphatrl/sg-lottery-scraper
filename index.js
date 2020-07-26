@@ -15,10 +15,6 @@ if (!fs.existsSync('temp')) {
   fs.mkdirSync('temp')
 }
 
-if (fs.existsSync('sglottery')) {
-  fs.unlinkSync('sglottery');
-}
-
 const main = async () => {
 
   const browser = await puppeteer.launch({
