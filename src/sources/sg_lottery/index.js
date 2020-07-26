@@ -30,4 +30,4 @@ const getLottery = async (browser) => {
   return lottery;
 }
 
-export default getLottery;
+export {getLottery as sg_lottery};

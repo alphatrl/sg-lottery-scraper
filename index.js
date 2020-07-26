@@ -4,8 +4,8 @@ import path from 'path';
 import {spawnSync} from 'child_process';
 
 import MODULES from './modules.js';
-import {default as getFinalList} from './src/utils/compareList.js';
-import {default as getSGLottery} from './src/sources/sg_lottery/index.js';
+import {default as verifyList} from './src/utils/compareList.js';
+// import {default as getSGLottery} from './src/sources/sg_lottery/index.js';
 import {default as Firebase} from './src/utils/firebase.js';
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -23,19 +23,24 @@ const main = async () => {
     args: isProduction ? ['--no-sandbox'] : [],
   })
 
-  var old_list = {}
+  for (const module of MODULES) {
+    const module_name = Object.keys(module);
+    const filename = path.join('temp', `${module_name}.json`);
+    var backup_list = {};
+    
+    if (fs.existsSync(filename)) {
+      backup_list = JSON.parse(fs.readFileSync(filename, 'utf8'));
+      fs.unlinkSync(filename)
+    }
 
-  const filename = path.join('temp', 'sg_lottery.json')
-  if (fs.existsSync(filename)) {
-    old_list = JSON.parse(fs.readFileSync(filename, 'utf8'));
-    fs.unlinkSync(filename)
+    // var [lottery_list, is_different_list] = await verifyList(await module(browser), old_list);
+    var [lottery_list, is_different_list] = await module[module_name](browser).then(async (new_list) => {
+      return await verifyList(new_list, backup_list);
+    });
+
+    all_differences_list = {... is_different_list};
+    fs.writeFileSync(filename, JSON.stringify(lottery_list, null, isProduction ? 0 : 2)); 
   }
-
-
-
-  var [lottery_list, is_different_list] = await getFinalList(await getSGLottery(browser), old_list);
-  all_differences_list = {... is_different_list};
-  fs.writeFileSync(filename, JSON.stringify(lottery_list, null, isProduction ? 0 : 2));
   
   await browser.close();
 
@@ -57,7 +62,7 @@ const main = async () => {
   }
 
   // settle firebase push notification
-  await firebase.pushTestTopicWithList(all_differences_list)
+  isProduction ? await firebase.pushTopicWithList(all_differences_list) : await firebase.pushTestTopicWithList(all_differences_list);
   await firebase.exit();
   
   return null
