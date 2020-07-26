@@ -5,7 +5,6 @@ import {spawnSync} from 'child_process';
 
 import MODULES from './modules.js';
 import {default as verifyList} from './src/utils/compareList.js';
-// import {default as getSGLottery} from './src/sources/sg_lottery/index.js';
 import {default as Firebase} from './src/utils/firebase.js';
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -14,6 +13,10 @@ var all_differences_list = {}
 
 if (!fs.existsSync('temp')) {
   fs.mkdirSync('temp')
+}
+
+if (fs.existsSync('sglottery')) {
+  fs.unlinkSync('sglottery');
 }
 
 const main = async () => {
