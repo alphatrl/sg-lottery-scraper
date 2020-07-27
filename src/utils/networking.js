@@ -1,4 +1,5 @@
 import {default as fetch} from "node-fetch";
+import fs from 'fs';
 
 /**
  * @param string JSON URL
@@ -17,4 +18,13 @@ export const getJSON = async(url) => {
     });
 
     return data
+}
+
+export const getJSONLocal = async(url) => {
+  try {
+    return JSON.parse(fs.readFileSync(url, 'utf8'));
+  } catch (error) {
+    console.log(error);
+    return {};
+  }
 }

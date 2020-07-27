@@ -4,7 +4,7 @@ import path from 'path';
 import {spawnSync} from 'child_process';
 
 import MODULES from './modules.js';
-import {getJSON} from './src/utils/networking.js';
+import {getJSON, getJSONLocal} from './src/utils/networking.js';
 import {default as verifyList} from './src/utils/compareList.js';
 import {default as Firebase} from './src/utils/firebase.js';
 
@@ -27,7 +27,7 @@ const main = async () => {
     const module_name = Object.keys(module);
     const filename = path.join('temp', `${module_name}.json`);
     const url = isProduction ? `https://alphatrl.github.io/sg-lottery-scraper/${module_name}.json` : `${path.resolve()}/${filename}`;
-    const backup_list = isProduction ? await getJSON(url) : await JSON.parse(fs.readFileSync(url, 'utf8'));;
+    const backup_list = isProduction ? await getJSON(url) : await getJSONLocal(url);
     
     if (fs.existsSync(filename)) {
       fs.unlinkSync(filename)
