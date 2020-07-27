@@ -12,7 +12,6 @@
 const getFinalList = async (new_list, old_list = {}) => {
   var is_different_list = {};
   var lottery_list = {};
-  console.log(old_list)
 
   // if old_list dont exist, e.g. 1st init
   if (Object.keys(old_list).length === 0 ) { 
