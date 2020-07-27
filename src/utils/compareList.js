@@ -12,9 +12,11 @@
 const getFinalList = async (new_list, old_list = {}) => {
   var is_different_list = {};
   var lottery_list = {};
+  console.log(old_list)
 
   // if old_list dont exist, e.g. 1st init
-  if (old_list.length === 0 ) { 
+  if (Object.keys(old_list).length === 0 ) { 
+    console.log("Previous JSON does not exist");
     for (let key in new_list) {
       is_different_list[key] = true;
     }
@@ -22,7 +24,8 @@ const getFinalList = async (new_list, old_list = {}) => {
   }
 
   // if new_list fail to get any data, return the old_list instead
-  if (new_list.length === 0 ) {
+  if (Object.keys(new_list).length === 0 ) {
+    console.log("[ERROR]: New JSON does not exist");
     for (let key in old_list) {
       is_different_list[key] = false;
     }

@@ -4,12 +4,13 @@ import path from 'path';
 import {spawnSync} from 'child_process';
 
 import MODULES from './modules.js';
+import {getJSON} from './src/utils/networking.js';
 import {default as verifyList} from './src/utils/compareList.js';
 import {default as Firebase} from './src/utils/firebase.js';
 
-const isProduction = process.env.NODE_ENV === 'production'
+const isProduction = process.env.NODE_ENV === 'production';
 const firebase = new Firebase();
-var all_differences_list = {}
+var all_differences_list = {};
 
 if (!fs.existsSync('temp')) {
   fs.mkdirSync('temp')
@@ -25,14 +26,13 @@ const main = async () => {
   for (const module of MODULES) {
     const module_name = Object.keys(module);
     const filename = path.join('temp', `${module_name}.json`);
-    var backup_list = {};
+    const url = isProduction ? `https://alphatrl.github.io/sg-lottery-scraper/${module_name}.json` : `${path.resolve()}/${filename}`;
+    const backup_list = isProduction ? await getJSON(url) : await JSON.parse(fs.readFileSync(url, 'utf8'));;
     
     if (fs.existsSync(filename)) {
-      backup_list = JSON.parse(fs.readFileSync(filename, 'utf8'));
       fs.unlinkSync(filename)
     }
 
-    // var [lottery_list, is_different_list] = await verifyList(await module(browser), old_list);
     var [lottery_list, is_different_list] = await module[module_name](browser).then(async (new_list) => {
       return await verifyList(new_list, backup_list);
     });
