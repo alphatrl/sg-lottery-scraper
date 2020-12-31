@@ -1,4 +1,3 @@
-import { spawnSync } from 'child_process';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
@@ -7,7 +6,7 @@ import puppeteer, { Browser } from 'puppeteer';
 dotenv.config();
 
 import { FourD, Sweep, Toto } from '../sources/sg_lottery';
-import { default as verifyList } from '../utils/compareList';
+import getListKeyDifference from '../utils/compareList';
 import { default as Firebase } from '../utils/firebase';
 import { getJSON, getJSONLocal } from '../utils/networking';
 
@@ -52,9 +51,14 @@ const main = async () => {
   const prevList = isProduction ? await getJSON(url) : await getJSONLocal(url);
   const lottery = await getLottery(browser);
 
-  console.log(prevList);
-
   await browser.close();
+  const difference = getListKeyDifference(lottery, prevList);
+
+  // write to file
+  fs.writeFileSync(
+    `${fileName}.json`,
+    JSON.stringify(lottery, null, isProduction ? 0 : 2)
+  );
 };
 
 main();
