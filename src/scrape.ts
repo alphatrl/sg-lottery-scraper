@@ -4,6 +4,7 @@ import puppeteer from 'puppeteer';
 import yargs from 'yargs';
 
 import { singapore } from './scraper';
+import { getJSON } from './utils/networking';
 
 dotenv.config();
 
@@ -21,8 +22,31 @@ if (!fs.existsSync('temp/data')) {
   fs.mkdirSync('temp/data');
 }
 
+const fetchServerJSON = async (): Promise<void> => {
+  const fileNameList = ['sg_lottery'];
+
+  fileNameList.map(async (fileName) => {
+    const url = `https://alphatrl.github.io/sg-lottery-scraper/${fileName}.json`;
+    console.log(`Retrieving ${fileName}.json from ${url}`);
+
+    await getJSON(url)
+      .then((list) => {
+        fs.writeFileSync(
+          `./temp/data/${fileName}.json`,
+          JSON.stringify(list, null, isProduction ? 0 : 2)
+        );
+      })
+      .catch(() => {
+        // File name does not exist in server
+        console.error(`[ERROR]: \'${fileName}\` does not exists in server`);
+      });
+  });
+};
+
 const main = async () => {
   // function to get files from server and store it locally
+  // if development env, the files should be already in local
+  isProduction ? fetchServerJSON() : null;
 
   // start puppeteer
   const browser = await puppeteer.launch({
@@ -42,7 +66,6 @@ const main = async () => {
   }
 
   await browser.close();
-  console.log(notificationList);
 
   // write to a file containing a list of push notifications to send
   // we dont want to send push notification and have the server serve outdated info

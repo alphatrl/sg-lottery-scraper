@@ -16,7 +16,7 @@ export async function getJSON(url: string): Promise<Record<string, unknown>> {
     })
     .catch((error) => {
       console.log(error);
-      return {};
+      return Promise.reject('invalid-json');
     });
 
   return data;
@@ -29,6 +29,6 @@ export async function getJSONLocal(
     return JSON.parse(fs.readFileSync(url, 'utf8'));
   } catch (error) {
     console.log(error);
-    return {};
+    return Promise.reject('invalid-json');
   }
 }

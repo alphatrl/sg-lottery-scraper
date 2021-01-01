@@ -7,13 +7,11 @@ dotenv.config();
 
 import { FourD, Sweep, Toto } from '../sources/sg_lottery';
 import getListKeyDifference from '../utils/compareList';
-import { getJSON, getJSONLocal } from '../utils/networking';
+import { getJSONLocal } from '../utils/networking';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const fileName = 'sg_lottery';
-const url = isProduction
-  ? `https://alphatrl.github.io/sg-lottery-scraper/${fileName}.json`
-  : `${path.resolve()}/temp/data/${fileName}.json`;
+const url = `${path.resolve()}/temp/data/${fileName}.json`;
 
 const DICT_KEY = {
   FourD: '4D',
@@ -63,7 +61,9 @@ export default async function singapore(
 ): Promise<Record<string, unknown>[]> {
   console.log('---------- Singapore ----------');
 
-  const prevList = isProduction ? await getJSON(url) : await getJSONLocal(url);
+  const prevList = await getJSONLocal(url).catch(() => {
+    return {};
+  });
   const lottery = await getLottery(browser);
   const difference = getListKeyDifference(lottery, prevList);
   const topicList = prepareTopic(difference);
