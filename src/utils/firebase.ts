@@ -1,17 +1,8 @@
-/**
- * Push notifications to firebase
- * Using firebase topics
- */
-
 import { default as admin } from 'firebase-admin';
 
-// convert to basic_human understanding
-const DICT_KEY = {
-  FourD: '4D',
-  Toto: 'Toto',
-  Sweep: 'Sweep',
-}
-
+/**
+ * Class to create push notifications to firebase using firebase topics
+ */
 export default class Firebase {
   app: admin.app.App;
 
@@ -27,61 +18,26 @@ export default class Firebase {
   }
 
   /**
-   * @param import List: {KEY: Boolean}
-   *
-   * Send push notifications via firebase
-   * If there TRUE, send a push notification to firebase using
-   * the topic KEY
+   * Send push notification via firebase topics
+   * @param topic
    */
-  async pushTopicWithList(list): Promise<void> {
-    for (const key in list) {
-      const topic = key;
+  async pushTopic(topic: {
+    topic: string;
+    title: string;
+    body: string;
+  }): Promise<void> {
+    const message = {
+      notification: {
+        title: topic.title,
+        body: topic.body,
+      },
+      topic: topic.topic,
+    };
 
-      // If true
-      if (list[key]) {
-        const message = {
-          notification: {
-            title: DICT_KEY[key] + ' Results',
-            body: 'See the latest results',
-          },
-          topic: topic,
-        };
-
-        await this.app
-          .messaging()
-          .send(message)
-          .then((response) => console.log(`[${topic}]: ${response}]`));
-      }
-    }
-  }
-
-  /**
-   * @param import List: {KEY: Boolean}
-   *
-   * Send push notifications via firebase
-   * If there TRUE, send a push notification to firebase using
-   * the topic KEY
-   *
-   * FOR DEV ENVIRONMENT ONLY!
-   */
-  async pushTestTopicWithList(list): Promise<void> {
-    for (const key in list) {
-      const topic = key + '-Test';
-
-      // If true
-      const message = {
-        notification: {
-          title: DICT_KEY[key] + ' Results',
-          body: 'See the latest results',
-        },
-        topic: topic,
-      };
-
-      await this.app
-        .messaging()
-        .send(message)
-        .then((response) => console.log(`[${topic}]: ${response}]`));
-    }
+    await this.app
+      .messaging()
+      .send(message)
+      .then((response) => console.log(`[${topic.topic}]: ${response}]`));
   }
 
   /**
