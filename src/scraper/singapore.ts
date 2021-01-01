@@ -1,25 +1,25 @@
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
-import puppeteer, { Browser } from 'puppeteer';
+import { Browser } from 'puppeteer';
 
 dotenv.config();
 
 import { FourD, Sweep, Toto } from '../sources/sg_lottery';
 import getListKeyDifference from '../utils/compareList';
-import { default as Firebase } from '../utils/firebase';
 import { getJSON, getJSONLocal } from '../utils/networking';
 
 const isProduction = process.env.NODE_ENV === 'production';
-const firebase = new Firebase();
 const fileName = 'sg_lottery';
 const url = isProduction
   ? `https://alphatrl.github.io/sg-lottery-scraper/${fileName}.json`
-  : `${path.resolve()}/temp/${fileName}.json}`;
+  : `${path.resolve()}/temp/data/${fileName}.json`;
 
-if (!fs.existsSync('temp')) {
-  fs.mkdirSync('temp');
-}
+const DICT_KEY = {
+  FourD: '4D',
+  Toto: 'Toto',
+  Sweep: 'Sweep',
+};
 
 const getLottery = async (browser: Browser) => {
   let fourD = [];
@@ -43,22 +43,38 @@ const getLottery = async (browser: Browser) => {
   };
 };
 
-const main = async () => {
-  const browser = await puppeteer.launch({
-    headless: isProduction,
-    args: isProduction ? ['--no-sandbox'] : [],
-  });
+const prepareTopic = (topics: string[]): Record<string, unknown>[] => {
+  const topicList = [];
+
+  for (const key of topics) {
+    if (key in DICT_KEY) {
+      topicList.push({
+        topic: isProduction ? key : `${key}-Test`,
+        title: `${DICT_KEY[key]} Results`,
+        body: 'See the latest results',
+      });
+    }
+  }
+  return topicList;
+};
+
+export default async function singapore(
+  browser: Browser
+): Promise<Record<string, unknown>[]> {
+  console.log('---------- Singapore ----------');
+
   const prevList = isProduction ? await getJSON(url) : await getJSONLocal(url);
   const lottery = await getLottery(browser);
-
-  await browser.close();
   const difference = getListKeyDifference(lottery, prevList);
+  const topicList = prepareTopic(difference);
 
   // write to file
   fs.writeFileSync(
-    `${fileName}.json`,
+    `./temp/data/${fileName}.json`,
     JSON.stringify(lottery, null, isProduction ? 0 : 2)
   );
-};
 
-main();
+  console.log('---------- Singapore [Fin] ----------');
+
+  return topicList;
+}
