@@ -31,14 +31,14 @@ on:
 
         - name: Deploy to Github Pages
           uses:  JamesIves/github-pages-deploy-action@3.7.1
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BASE_BRANCH: master
-          BRANCH: gh-pages
-          GIT_CONFIG_NAME: 'Lottery Scraper'
-          FOLDER: temp/data
-          CLEAN: true
-          SINGLE_COMMIT: true
+          with:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            BASE_BRANCH: master
+            BRANCH: gh-pages
+            GIT_CONFIG_NAME: 'Lottery Scraper'
+            FOLDER: temp/data
+            CLEAN: true
+            SINGLE_COMMIT: true
 
         - name: Send Push Notification
           env: 
