@@ -1,12 +1,9 @@
-import dotenv from 'dotenv';
 import fs from 'fs';
 import puppeteer from 'puppeteer';
 import yargs from 'yargs';
 
 import { singapore } from './scraper';
 import { getJSON } from './utils/networking';
-
-dotenv.config();
 
 const argv = yargs(process.argv.slice(2)).alias('s', 'silent').argv;
 const isProduction = process.env.NODE_ENV === 'production';

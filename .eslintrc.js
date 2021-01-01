@@ -18,4 +18,3 @@ module.exports = {
     'import/order': 'off',
   },
 };
-  

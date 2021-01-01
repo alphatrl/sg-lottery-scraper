@@ -1,6 +1,6 @@
 {
   "name": "sg-lottery-scrapper",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "main": "index.js",
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
@@ -27,9 +27,12 @@
     "yargs": "^16.2.0"
   },
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "node dist/scrape.js",
     "develop": "ts-node src/scrape.ts",
+    "start:silent": "node dist/scrape.js -s",
+    "develop:silent": "ts-node src/scrape.ts -s",
+    "firebase": "ts-node src/utils/sendFirebase.ts",
     "build": "tsc --outDir dist",
-    "silent": "node dist/index.js "
+    "clean": "rm -Rf dist/ && rm -Rf temp/"
   }
 }

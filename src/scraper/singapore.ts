@@ -1,11 +1,8 @@
-import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { Browser } from 'puppeteer';
 
-dotenv.config();
-
-import { FourD, Sweep, Toto } from '../sources/sg_lottery';
+import { FourD, Sweep, Toto } from '../sources/singapore';
 import getListKeyDifference from '../utils/compareList';
 import { getJSONLocal } from '../utils/networking';
 
