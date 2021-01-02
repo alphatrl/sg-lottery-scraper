@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import fs from 'fs';
 import puppeteer from 'puppeteer';
 import yargs from 'yargs';
@@ -11,6 +12,8 @@ const supportedCountries = ['singapore'];
 const countries = argv._.length === 0 ? supportedCountries : argv._;
 let notificationList = [];
 
+dotenv.config();
+
 if (!fs.existsSync('temp')) {
   fs.mkdirSync('temp');
 }
@@ -23,7 +26,7 @@ const fetchServerJSON = async (): Promise<void> => {
   const fileNameList = ['sg_lottery'];
 
   for await (const fileName of fileNameList) {
-    const url = `https://alphatrl.github.io/sg-lottery-scraper/${fileName}.json`;
+    const url = `${process.env.SERVER_URL}/${fileName}.json`;
     console.log(`Retrieving ${fileName}.json from ${url}`);
 
     const list = await getJSON(url).catch(() => {
@@ -37,13 +40,14 @@ const fetchServerJSON = async (): Promise<void> => {
           `./temp/data/${fileName}.json`,
           JSON.stringify(list, null, isProduction ? 0 : 2)
         )
-      : null;
+      : console.log('[WARN]: Skipping file creation');
   }
 };
 
 const main = async () => {
   // function to get files from server and store it locally
   // if development env, the files should be already in local
+  console.log(`[INFO]: Current Environment - ${process.env.NODE_ENV}`);
   isProduction ? fetchServerJSON() : null;
 
   // start puppeteer
