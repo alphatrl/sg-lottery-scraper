@@ -24,16 +24,5 @@ jobs:
       - name: Scrape data from ALL sources
         env:
           NODE_ENV: production
-          SERVER_URL: ${{ secrets.SERVER_URL }}
         run: yarn start -s
 
-      - name: Deploy to Github Pages
-        uses:  JamesIves/github-pages-deploy-action@3.7.1
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BASE_BRANCH: master
-          BRANCH: gh-pages
-          GIT_CONFIG_NAME: 'Lottery Scraper'
-          FOLDER: temp/data
-          CLEAN: true
-          SINGLE_COMMIT: true

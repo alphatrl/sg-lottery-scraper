@@ -27,6 +27,7 @@ jobs:
       - name: Scrape data from ALL sources
         env:
           NODE_ENV: production
+          SERVER_URL: ${{ secrets.SERVER_URL }}
         run: yarn start
 
       - name: Deploy to Github Pages
