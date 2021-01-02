@@ -1,4 +1,4 @@
-name: scrape-silent-all
+name: scrape-test
 on:
   workflow_dispatch:
 jobs:
@@ -24,5 +24,6 @@ jobs:
       - name: Scrape data from ALL sources
         env:
           NODE_ENV: production
+          SERVER_URL: ${{ secrets.SERVER_URL }}
         run: yarn start -s
 
