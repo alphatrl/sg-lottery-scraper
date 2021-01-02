@@ -8,7 +8,6 @@ import { default as fetch } from 'node-fetch';
  * Fetches JSON from from url provided
  * Returns a Promise dictionary
  */
-
 export async function getJSON(url: string): Promise<Record<string, unknown>> {
   const data = await fetch(url)
     .then((response) => {

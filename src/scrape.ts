@@ -22,22 +22,23 @@ if (!fs.existsSync('temp/data')) {
 const fetchServerJSON = async (): Promise<void> => {
   const fileNameList = ['sg_lottery'];
 
-  fileNameList.map(async (fileName) => {
+  for await (const fileName of fileNameList) {
     const url = `https://alphatrl.github.io/sg-lottery-scraper/${fileName}.json`;
     console.log(`Retrieving ${fileName}.json from ${url}`);
 
-    await getJSON(url)
-      .then((list) => {
-        fs.writeFileSync(
+    const list = await getJSON(url).catch(() => {
+      console.error(`[ERROR]: \'${fileName}\` does not exists in server`);
+      return {};
+    });
+
+    // only write to file if information is NOT empty
+    Object.keys(list).length > 0
+      ? fs.writeFileSync(
           `./temp/data/${fileName}.json`,
           JSON.stringify(list, null, isProduction ? 0 : 2)
-        );
-      })
-      .catch(() => {
-        // File name does not exist in server
-        console.error(`[ERROR]: \'${fileName}\` does not exists in server`);
-      });
-  });
+        )
+      : null;
+  }
 };
 
 const main = async () => {
@@ -52,21 +53,21 @@ const main = async () => {
   });
 
   // loop through input values
-  for (const index in countries) {
-    switch (countries[index]) {
+  for await (const country of countries) {
+    switch (country) {
       case 'singapore':
         notificationList = [...(await singapore(browser))];
         break;
       default:
-        console.log(`[WARN]: \`${countries[index]}\` is an invalid argument`);
+        console.log(`[WARN]: \`${country}\` is an invalid argument`);
     }
   }
 
   await browser.close();
 
-  // write to a file containing a list of push notifications to send
+  // write to a file containing a list of push notifications to send to the server later
   // we dont want to send push notification and have the server serve outdated info
-  // in case github workflows take to long
+  // in case github workflows take too long
   fs.writeFileSync(
     `./temp/topics.json`,
     JSON.stringify(
