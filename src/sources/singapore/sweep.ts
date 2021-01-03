@@ -18,12 +18,7 @@ export default async function sweep(
       }
     )
     .catch(async (error: Error) => {
-      console.log('[ERROR]: Problem loading SWEEP page');
-      console.error(error);
-      console.error(
-        'data:image/png;base64,' +
-          (await page.screenshot({ encoding: 'base64', fullPage: true }))
-      );
+      console.log('[ERROR]: Problem loading SWEEP page \n', error);
     });
 
   if (!response) {
@@ -98,9 +93,10 @@ export default async function sweep(
     });
 
   if (results.length === 0) {
-    console.log('[ERROR]: Problem loading SWEEP page');
+    console.error('[ERROR]: Problem loading SWEEP page');
     console.error(
-      'data:image/png;base64,' +
+      '[ERROR]: Problem loading SWEEP page' +
+        'data:image/png;base64,' +
         (await page.screenshot({ encoding: 'base64', fullPage: true }))
     );
   }

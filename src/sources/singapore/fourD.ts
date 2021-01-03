@@ -15,12 +15,7 @@ export default async function fourD(
       waitUntil: 'networkidle0',
     })
     .catch(async (error: Error) => {
-      console.log('[ERROR]: Problem loading 4D page');
-      console.error(error);
-      console.error(
-        'data:image/png;base64,' +
-          (await page.screenshot({ encoding: 'base64', fullPage: true }))
-      );
+      console.error('[ERROR]: Problem loading 4D page \n', error);
     });
 
   if (!response) {
@@ -76,9 +71,9 @@ export default async function fourD(
     });
 
   if (results.length === 0) {
+    console.error('[ERROR]: Problem loading 4D page');
     console.error(
-      '[ERROR]: Problem loading 4D page' +
-        'data:image/png;base64,' +
+      'data:image/png;base64,' +
         (await page.screenshot({ encoding: 'base64', fullPage: true }))
     );
   }
