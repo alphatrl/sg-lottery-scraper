@@ -61,6 +61,15 @@ export default async function toto(
       console.error(error);
       return [];
     });
+
+  if (results.length === 0) {
+    console.log('[ERROR]: Problem loading TOTO page');
+    console.error(
+      'data:image/png;base64,' +
+        (await page.screenshot({ encoding: 'base64', fullPage: true }))
+    );
+  }
+
   await page.close();
   console.log(`[TOTO] - scraped ${results.length} items`);
   return results;
