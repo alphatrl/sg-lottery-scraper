@@ -48,7 +48,7 @@ const main = async () => {
   // function to get files from server and store it locally
   // if development env, the files should be already in local
   console.log(`[INFO]: Current Environment - ${process.env.NODE_ENV}`);
-  isProduction ? fetchServerJSON : null;
+  isProduction ? fetchServerJSON() : null;
 
   // start puppeteer
   const browser = await puppeteer.launch({

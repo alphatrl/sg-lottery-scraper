@@ -11,7 +11,9 @@ export default async function fourD(
 ): Promise<Record<string, unknown>[] | []> {
   const page = await browser.newPage();
   const response = await page
-    .goto('http://www.singaporepools.com.sg/en/product/Pages/4d_results.aspx')
+    .goto('http://www.singaporepools.com.sg/en/product/Pages/4d_results.aspx', {
+      waitUntil: 'networkidle0',
+    })
     .catch(async (error: Error) => {
       console.log('[ERROR]: Problem loading 4D page');
       console.error(error);
@@ -74,9 +76,9 @@ export default async function fourD(
     });
 
   if (results.length === 0) {
-    console.log('[ERROR]: Problem loading 4D page');
     console.error(
-      'data:image/png;base64,' +
+      '[ERROR]: Problem loading 4D page' +
+        'data:image/png;base64,' +
         (await page.screenshot({ encoding: 'base64', fullPage: true }))
     );
   }
