@@ -17,7 +17,7 @@ export default async function toto(
       console.error(error);
       console.error(
         'data:image/png;base64,' +
-          (await page.screenshot({ encoding: 'base64' }))
+          (await page.screenshot({ encoding: 'base64', fullPage: true }))
       );
     });
 
