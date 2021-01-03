@@ -6,13 +6,13 @@ import yargs from 'yargs';
 import { singapore } from './scraper';
 import { getJSON } from './utils/networking';
 
+dotenv.config();
+
 const argv = yargs(process.argv.slice(2)).alias('s', 'silent').argv;
 const isProduction = process.env.NODE_ENV === 'production';
 const supportedCountries = ['singapore'];
 const countries = argv._.length === 0 ? supportedCountries : argv._;
 let notificationList = [];
-
-dotenv.config();
 
 if (!fs.existsSync('temp')) {
   fs.mkdirSync('temp');
@@ -48,7 +48,7 @@ const main = async () => {
   // function to get files from server and store it locally
   // if development env, the files should be already in local
   console.log(`[INFO]: Current Environment - ${process.env.NODE_ENV}`);
-  isProduction ? fetchServerJSON() : null;
+  isProduction ? fetchServerJSON : null;
 
   // start puppeteer
   const browser = await puppeteer.launch({

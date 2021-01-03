@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { Browser } from 'puppeteer';
@@ -5,6 +6,8 @@ import { Browser } from 'puppeteer';
 import { FourD, Sweep, Toto } from '../sources/singapore';
 import getListKeyDifference from '../utils/compareList';
 import { getJSONLocal } from '../utils/networking';
+
+dotenv.config();
 
 const isProduction = process.env.NODE_ENV === 'production';
 const fileName = 'sg_lottery';
@@ -26,9 +29,11 @@ const getLottery = async (browser: Browser) => {
     Object.keys(toto).length === 0 ||
     Object.keys(sweep).length === 0
   ) {
-    fourD = await FourD(browser);
-    toto = await Toto(browser);
-    sweep = await Sweep(browser);
+    [fourD, toto, sweep] = await Promise.all([
+      await FourD(browser),
+      await Toto(browser),
+      await Sweep(browser),
+    ]);
   }
 
   return {

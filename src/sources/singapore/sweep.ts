@@ -10,9 +10,22 @@ export default async function sweep(
   browser: Browser
 ): Promise<Record<string, unknown>[] | []> {
   const page = await browser.newPage();
-  await page.goto(
-    'http://www.singaporepools.com.sg/en/product/Pages/sweep_results.aspx'
-  );
+  const response = await page
+    .goto(
+      'http://www.singaporepools.com.sg/en/product/Pages/sweep_results.aspx'
+    )
+    .catch(async (error: Error) => {
+      console.log('[ERROR]: Problem loading SWEEP page');
+      console.error(error);
+      console.error(
+        'data:image/png;base64,' +
+          (await page.screenshot({ encoding: 'base64' }))
+      );
+    });
+
+  if (!response) {
+    return [];
+  }
   const results = await page
     .evaluate(() => {
       const items = [...document.querySelectorAll('.tables-wrap')];
