@@ -12,7 +12,10 @@ export default async function sweep(
   const page = await browser.newPage();
   const response = await page
     .goto(
-      'http://www.singaporepools.com.sg/en/product/Pages/sweep_results.aspx'
+      'http://www.singaporepools.com.sg/en/product/Pages/sweep_results.aspx',
+      {
+        waitUntil: 'networkidle0',
+      }
     )
     .catch(async (error: Error) => {
       console.log('[ERROR]: Problem loading SWEEP page');

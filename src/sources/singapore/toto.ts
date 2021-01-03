@@ -11,7 +11,12 @@ export default async function toto(
 ): Promise<Record<string, unknown>[] | []> {
   const page = await browser.newPage();
   const response = await page
-    .goto('http://www.singaporepools.com.sg/en/product/Pages/toto_results.aspx')
+    .goto(
+      'http://www.singaporepools.com.sg/en/product/Pages/toto_results.aspx',
+      {
+        waitUntil: 'networkidle0',
+      }
+    )
     .catch(async (error: Error) => {
       console.log('[ERROR]: Problem loading Toto page');
       console.error(error);
