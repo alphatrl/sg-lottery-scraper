@@ -23,7 +23,15 @@ jobs:
 
       - name: Scrape data from ALL sources
         env:
-          NODE_ENV: production
+          NODE_ENV: development
           SERVER_URL: ${{ secrets.SERVER_URL }}
-        run: yarn start -s
+        run: yarn start
 
+      - name: Send Push Notification
+        env:
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_PRIVATE_KEY_ID: ${{ secrets.FIREBASE_PRIVATE_KEY_ID }}
+          FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
+          FIREBASE_DATABASE_URL: ${{ secrets.FIREBASE_DATABASE_URL }}
+          FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
+        run: yarn firebase
