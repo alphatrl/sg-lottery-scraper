@@ -1,46 +1,51 @@
 import dotenv from 'dotenv';
 import fs from 'fs';
-import puppeteer from 'puppeteer';
-import yargs from 'yargs';
+import puppeteer, { Browser } from 'puppeteer';
 
 import { singapore } from './scraper';
-import { getJSON } from './utils/networking';
+import { SingaporeLottery } from './sources/singapore/model';
+// import { getJSON } from './utils/networking';
 
 dotenv.config();
 
-const argv = yargs(process.argv.slice(2)).alias('s', 'silent').argv;
 const isProduction = process.env.NODE_ENV === 'production';
-const supportedCountries = ['singapore'];
-const countries = argv._.length === 0 ? supportedCountries : argv._;
-let notificationList = [];
+const isTesting = process.env.NODE_ENV === 'testing';
+const isSilent = process.env.SILENT === 'true';
 
-if (!fs.existsSync('temp')) {
-  fs.mkdirSync('temp');
-}
+const notificationList = [];
 
 if (!fs.existsSync('temp/data')) {
   fs.mkdirSync('temp/data');
 }
 
-const fetchServerJSON = async (): Promise<void> => {
-  const fileNameList = ['sg_lottery'];
+// const fetchServerJSON = async (): Promise<void> => {
+//   const fileNameList = ['sg_lottery'];
 
-  for await (const fileName of fileNameList) {
-    const url = `${process.env.SERVER_URL}/${fileName}.json`;
-    console.log(`Retrieving ${fileName}.json from ${url}`);
+//   for await (const fileName of fileNameList) {
+//     const url = `${process.env.SERVER_URL}/${fileName}.json`;
+//     console.log(`Retrieving ${fileName}.json from ${url}`);
 
-    const list = await getJSON(url).catch(() => {
-      console.error(`[ERROR]: \'${fileName}\` does not exists in server`);
-      return {};
-    });
+//     const list = await getJSON<SingaporeLottery>(url).catch(() => {
+//       console.error(`[ERROR]: \'${fileName}\` does not exists in server`);
+//       return {};
+//     });
 
-    // only write to file if information is NOT empty
-    Object.keys(list).length > 0
-      ? fs.writeFileSync(
-          `./temp/data/${fileName}.json`,
-          JSON.stringify(list, null, isProduction ? 0 : 2)
-        )
-      : console.log('[WARN]: Skipping file creation');
+//     // only write to file if information is NOT empty
+//     Object.keys(list).length > 0
+//       ? fs.writeFileSync(
+//           `./temp/data/${fileName}.json`,
+//           JSON.stringify(list, null, isProduction ? 0 : 2)
+//         )
+//       : console.log('[WARN]: Skipping file creation');
+//   }
+// };
+
+const processSingapore = async (browser: Browser) => {
+  try {
+    notificationList.push(...(await singapore(browser)));
+    console.log(notificationList);
+  } catch (error) {
+    console.error(error);
   }
 };
 
@@ -48,24 +53,19 @@ const main = async () => {
   // function to get files from server and store it locally
   // if development env, the files should be already in local
   console.log(`[INFO]: Current Environment - ${process.env.NODE_ENV}`);
-  isProduction ? fetchServerJSON() : null;
+  const isARMMac = process.arch === 'arm64' && process.platform === 'darwin';
+  // isProduction ? fetchServerJSON() : null;
 
   // start puppeteer
   const browser = await puppeteer.launch({
     headless: isProduction,
     args: isProduction ? ['--no-sandbox'] : [],
+    executablePath: isARMMac
+      ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+      : undefined,
   });
 
-  // loop through input values
-  for await (const country of countries) {
-    switch (country) {
-      case 'singapore':
-        notificationList = [...(await singapore(browser))];
-        break;
-      default:
-        console.log(`[WARN]: \`${country}\` is an invalid argument`);
-    }
-  }
+  await processSingapore(browser);
 
   await browser.close();
 
@@ -76,7 +76,7 @@ const main = async () => {
     `./temp/topics.json`,
     JSON.stringify(
       {
-        silent: argv.s ? true : false,
+        silent: isSilent,
         topics: notificationList,
       },
       null,
