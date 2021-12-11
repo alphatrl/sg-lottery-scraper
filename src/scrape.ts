@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-import fs from 'fs';
 import puppeteer, { Browser } from 'puppeteer';
 
 import singapore from './sources/singapore';
@@ -37,7 +36,7 @@ const notificationList = [];
 // };
 
 const processSingapore = async (browser: Browser) => {
-  const fileName = 'sg_lottery';
+  const fileName = 'sg_lottery.json';
   try {
     const singaporeResults = await singapore(browser);
     notificationList.push(...singaporeResults.topics);
@@ -45,6 +44,21 @@ const processSingapore = async (browser: Browser) => {
   } catch (error) {
     console.error(error);
   }
+};
+
+/**
+ * write to a file containing a list of push notifications to send to the server later
+ * we dont want to send push notification and have the server serve outdated info
+ * in case github workflows take too long
+ */
+const createTopicsFile = () => {
+  const fileName = 'topics.json';
+  const scraperTopics = {
+    silent: isSilent,
+    topics: notificationList,
+  };
+
+  writeStore(fileName, scraperTopics);
 };
 
 const main = async () => {
@@ -64,23 +78,9 @@ const main = async () => {
   });
 
   await processSingapore(browser);
-
   await browser.close();
 
-  // write to a file containing a list of push notifications to send to the server later
-  // we dont want to send push notification and have the server serve outdated info
-  // in case github workflows take too long
-  fs.writeFileSync(
-    `./temp/topics.json`,
-    JSON.stringify(
-      {
-        silent: isSilent,
-        topics: notificationList,
-      },
-      null,
-      isProduction ? 0 : 2
-    )
-  );
+  createTopicsFile();
 };
 
 // main thread
