@@ -1,7 +1,9 @@
 {
-  "name": "sg-lottery-scrapper",
+  "name": "sg-lottery-scraper",
   "version": "3.1.0",
-  "main": "index.js",
+  "exports": "./index.js",
+  "license": "MIT",
+  "author": "Amos Tan <hello@amostan.me>",
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
     "@types/node": "^16.11.11",
@@ -34,5 +36,8 @@
     "firebase": "ts-node src/utils/sendFirebase.ts",
     "build": "tsc --outDir dist",
     "clean": "rm -Rf dist/ && rm -Rf temp/"
+  },
+  "engines": {
+    "node": ">=14.13.1"
   }
 }
