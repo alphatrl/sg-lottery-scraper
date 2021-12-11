@@ -7,9 +7,9 @@
  * Returns: a list of keys which differ from the 2 lists
  */
 
-export default function getListKeyDifference(
-  new_list: Record<string, unknown>,
-  old_list: Record<string, unknown>
+export default function getListKeyDifference<T>(
+  new_list: T,
+  old_list: T
 ): string[] {
   const different_list = [];
 

@@ -2,8 +2,9 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import puppeteer, { Browser } from 'puppeteer';
 
-import { singapore } from './scraper';
+import singapore from './sources/singapore';
 import { SingaporeLottery } from './sources/singapore/model';
+import { writeStore } from './utils/output';
 // import { getJSON } from './utils/networking';
 
 dotenv.config();
@@ -11,12 +12,7 @@ dotenv.config();
 const isProduction = process.env.NODE_ENV === 'production';
 const isTesting = process.env.NODE_ENV === 'testing';
 const isSilent = process.env.SILENT === 'true';
-
 const notificationList = [];
-
-if (!fs.existsSync('temp/data')) {
-  fs.mkdirSync('temp/data');
-}
 
 // const fetchServerJSON = async (): Promise<void> => {
 //   const fileNameList = ['sg_lottery'];
@@ -41,9 +37,11 @@ if (!fs.existsSync('temp/data')) {
 // };
 
 const processSingapore = async (browser: Browser) => {
+  const fileName = 'sg_lottery';
   try {
-    notificationList.push(...(await singapore(browser)));
-    console.log(notificationList);
+    const singaporeResults = await singapore(browser);
+    notificationList.push(...singaporeResults.topics);
+    writeStore<SingaporeLottery>(fileName, singaporeResults.results, 'upload');
   } catch (error) {
     console.error(error);
   }
@@ -58,8 +56,8 @@ const main = async () => {
 
   // start puppeteer
   const browser = await puppeteer.launch({
-    headless: isProduction,
-    args: isProduction ? ['--no-sandbox'] : [],
+    headless: isProduction || isTesting,
+    args: isProduction || isTesting ? ['--no-sandbox'] : [],
     executablePath: isARMMac
       ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
       : undefined,
