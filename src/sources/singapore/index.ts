@@ -1,4 +1,3 @@
-import dotenv from 'dotenv';
 import { Browser } from 'puppeteer';
 
 import FourD from './fourD';
@@ -8,8 +7,6 @@ import { SingaporeLottery, SingaporeLotteryRaw } from './model';
 import getListKeyDifference from '../../utils/compareList';
 import { readStore } from '../../utils/output';
 import { FirebaseTopic } from '../model';
-
-dotenv.config();
 
 const isProduction = process.env.NODE_ENV === 'production';
 const fileName = 'sg_lottery.json';
@@ -65,7 +62,7 @@ export default async function singapore(
   console.log('---------- Singapore ----------');
   const prevList = readStore<SingaporeLottery>(fileName);
   const lottery = await getLottery(browser);
-  const difference = getListKeyDifference(lottery, prevList);
+  const difference = getListKeyDifference<SingaporeLottery>(lottery, prevList);
   const topicList = prepareTopic(difference);
   console.log('---------- Singapore [Fin] ----------');
 

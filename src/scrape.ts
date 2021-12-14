@@ -4,7 +4,7 @@ import puppeteer, { Browser } from 'puppeteer';
 import singapore from './sources/singapore';
 import { SingaporeLottery } from './sources/singapore/model';
 import { writeStore } from './utils/output';
-// import { getJSON } from './utils/networking';
+import { getJSON } from './utils/networking';
 
 dotenv.config();
 
@@ -13,38 +13,32 @@ const isTesting = process.env.NODE_ENV === 'testing';
 const isSilent = process.env.SILENT === 'true';
 const notificationList = [];
 
-// const fetchServerJSON = async (): Promise<void> => {
-//   const fileNameList = ['sg_lottery'];
+async function writeServerFile<T>(fileName: string): Promise<void> {
+  const url = `${process.env.SERVER_URL}/${fileName}`;
+  console.log(`Retrieving ${fileName}.json from ${url}`);
+  const list = await getJSON<T>(url).catch(() => {
+    console.error(`[ERROR]: \'${fileName}\` does not exists in server`);
+    return {};
+  });
+  Object.keys(list).length > 0
+    ? writeStore(fileName, list)
+    : console.warn('[WARN]: Skipping file creation');
+}
 
-//   for await (const fileName of fileNameList) {
-//     const url = `${process.env.SERVER_URL}/${fileName}.json`;
-//     console.log(`Retrieving ${fileName}.json from ${url}`);
-
-//     const list = await getJSON<SingaporeLottery>(url).catch(() => {
-//       console.error(`[ERROR]: \'${fileName}\` does not exists in server`);
-//       return {};
-//     });
-
-//     // only write to file if information is NOT empty
-//     Object.keys(list).length > 0
-//       ? fs.writeFileSync(
-//           `./temp/data/${fileName}.json`,
-//           JSON.stringify(list, null, isProduction ? 0 : 2)
-//         )
-//       : console.log('[WARN]: Skipping file creation');
-//   }
-// };
-
-const processSingapore = async (browser: Browser) => {
+async function processSingapore(browser: Browser) {
   const fileName = 'sg_lottery.json';
   try {
+    isProduction || isTesting
+      ? await writeServerFile<SingaporeLottery>(fileName)
+      : null;
+
     const singaporeResults = await singapore(browser);
     notificationList.push(...singaporeResults.topics);
     writeStore<SingaporeLottery>(fileName, singaporeResults.results, 'upload');
   } catch (error) {
     console.error(error);
   }
-};
+}
 
 /**
  * write to a file containing a list of push notifications to send to the server later
@@ -62,11 +56,8 @@ const createTopicsFile = () => {
 };
 
 const main = async () => {
-  // function to get files from server and store it locally
-  // if development env, the files should be already in local
   console.log(`[INFO]: Current Environment - ${process.env.NODE_ENV}`);
   const isARMMac = process.arch === 'arm64' && process.platform === 'darwin';
-  // isProduction ? fetchServerJSON() : null;
 
   // start puppeteer
   const browser = await puppeteer.launch({
@@ -83,8 +74,9 @@ const main = async () => {
   createTopicsFile();
 };
 
-// main thread
-process.on('uncaughtException', function (err) {
-  console.log(err);
-});
-main();
+main()
+  .then(() => process.exit(0))
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });

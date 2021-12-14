@@ -1,4 +1,6 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
-export const fetch = (...args) =>
-  import('node-fetch').then(({ default: fetch }) => fetch(...args));
+const _importDynamic = new Function('modulePath', 'return import(modulePath)');
+
+export async function fetch(...args) {
+  const { default: fetch } = await _importDynamic('node-fetch');
+  return fetch(...args);
+}

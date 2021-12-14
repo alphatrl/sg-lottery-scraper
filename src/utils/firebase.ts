@@ -1,4 +1,7 @@
 import { default as admin } from 'firebase-admin';
+import { FirebaseTopic } from '../sources/model';
+import dotenv from 'dotenv';
+dotenv.config();
 
 /**
  * Class to create push notifications to firebase using firebase topics
@@ -21,11 +24,7 @@ export default class Firebase {
    * Send push notification via firebase topics
    * @param topic
    */
-  async pushTopic(topic: {
-    topic: string;
-    title: string;
-    body: string;
-  }): Promise<void> {
+  async pushTopic(topic: FirebaseTopic): Promise<void> {
     const message = {
       notification: {
         title: topic.title,
