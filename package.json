@@ -6,6 +6,7 @@
   "author": "Amos Tan <hello@amostan.me>",
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
+    "@types/lodash": "^4.14.178",
     "@types/node": "^16.11.11",
     "@types/node-fetch": "^3.0.3",
     "@types/puppeteer": "^5.4.4",
@@ -24,18 +25,17 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "firebase-admin": "^10.0.0",
+    "lodash": "^4.17.21",
     "node-fetch": "^3.1.0",
     "puppeteer": "^11.0.0",
     "yargs": "^17.3.0"
   },
   "scripts": {
     "start": "node dist/scrape.js",
-    "develop": "ts-node src/scrape.ts",
-    "start:silent": "node dist/scrape.js -s",
-    "develop:silent": "ts-node src/scrape.ts -s",
-    "firebase": "ts-node src/utils/sendFirebase.ts",
+    "dev:scrape": "ts-node src/scrape.ts",
+    "firebase": "ts-node src/sendFirebase.ts",
     "build": "tsc --outDir dist",
-    "clean": "rm -Rf dist/ && rm -Rf temp/"
+    "clean": "rm -Rf dist/ && rm -Rf temp/ && rm -rf output/"
   },
   "engines": {
     "node": ">=14.13.1"
