@@ -27,7 +27,7 @@ export default function getListKeyDifference<T>(
   }
 
   for (const key in new_list) {
-    if (isEqual(new_list[key], old_list[key])) {
+    if (!isEqual(new_list[key], old_list[key])) {
       console.log(`[${key}]: Fetched new data`);
       different_list.push(key);
     } else {
