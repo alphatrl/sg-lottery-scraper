@@ -10,25 +10,33 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup Node
+      - name: Use Node 14
         uses: actions/setup-node@v1
         with:
           node-version: '14'
 
-      - name: Install dependencies
         run: yarn install
-
-      - name: Build /dist
         run: yarn build
 
       - name: Scrape data from ALL sources
         env:
-          NODE_ENV: development
+          NODE_ENV: testing
           SERVER_URL: ${{ secrets.SERVER_URL }}
         run: yarn start
 
-      - name: Send Push Notification
+      - name: Deploy to Github Pages
+        if: success()
+        uses: crazy-max/ghaction-github-pages@v2
+        with:
+          target_branch: gh-pages
+          build_dir: output
+          commit_message: 'chore: deploy to GitHub Pages'
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Send Push Notification
+        if: success()
+        env: 
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
           FIREBASE_PRIVATE_KEY_ID: ${{ secrets.FIREBASE_PRIVATE_KEY_ID }}
           FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
