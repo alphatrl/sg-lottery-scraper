@@ -32,8 +32,9 @@
   },
   "scripts": {
     "start": "node dist/scrape.js",
+    "firebase": "node dist/sendFirebase.js",
     "dev:scrape": "ts-node src/scrape.ts",
-    "firebase": "ts-node src/sendFirebase.ts",
+    "dev:firebase": "ts-node src/sendFirebase.ts",
     "build": "tsc --outDir dist",
     "clean": "rm -Rf dist/ && rm -Rf temp/ && rm -rf output/"
   },

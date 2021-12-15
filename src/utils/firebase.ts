@@ -1,7 +1,5 @@
 import { default as admin } from 'firebase-admin';
 import { FirebaseTopic } from '../sources/model';
-import dotenv from 'dotenv';
-dotenv.config();
 
 /**
  * Class to create push notifications to firebase using firebase topics

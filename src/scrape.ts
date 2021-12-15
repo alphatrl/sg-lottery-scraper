@@ -10,7 +10,6 @@ dotenv.config();
 
 const isProduction = process.env.NODE_ENV === 'production';
 const isTesting = process.env.NODE_ENV === 'testing';
-const isSilent = process.env.SILENT === 'true';
 const notificationList = [];
 
 async function writeServerFile<T>(fileName: string): Promise<void> {
@@ -48,7 +47,6 @@ async function processSingapore(browser: Browser) {
 const createTopicsFile = () => {
   const fileName = 'topics.json';
   const scraperTopics = {
-    silent: isSilent,
     topics: notificationList,
   };
 

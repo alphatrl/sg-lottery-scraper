@@ -5,6 +5,5 @@ export interface FirebaseTopic {
 }
 
 export interface ScraperTopics {
-  silent: boolean;
   topics: FirebaseTopic[];
 }
