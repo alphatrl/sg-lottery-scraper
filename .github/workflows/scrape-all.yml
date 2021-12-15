@@ -13,15 +13,12 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup Node
+      - name: Use Node 14
         uses: actions/setup-node@v1
         with:
           node-version: '14'
 
-      - name: Install dependencies
         run: yarn install
-
-      - name: Build /dist
         run: yarn build
 
       - name: Scrape data from ALL sources
@@ -31,17 +28,17 @@ jobs:
         run: yarn start
 
       - name: Deploy to Github Pages
-        uses:  JamesIves/github-pages-deploy-action@3.7.1
+        if: success()
+        uses: crazy-max/ghaction-github-pages@v2
         with:
+          target_branch: gh-pages
+          build_dir: output
+          commit_message: 'chore: deploy to GitHub Pages'
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BASE_BRANCH: master
-          BRANCH: gh-pages
-          GIT_CONFIG_NAME: 'Lottery Scraper'
-          FOLDER: temp/data
-          CLEAN: true
-          SINGLE_COMMIT: true
 
       - name: Send Push Notification
+        if: success()
         env: 
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
           FIREBASE_PRIVATE_KEY_ID: ${{ secrets.FIREBASE_PRIVATE_KEY_ID }}

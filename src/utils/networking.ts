@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { default as fetch } from 'node-fetch';
+import { fetch } from './fetch';
 
 /**
  * @param url JSON URL
@@ -8,24 +8,22 @@ import { default as fetch } from 'node-fetch';
  * Fetches JSON from from url provided
  * Returns a Promise dictionary
  */
-export async function getJSON(url: string): Promise<Record<string, unknown>> {
-  const data = await fetch(url)
+export async function getJSON<T>(url: string): Promise<T> {
+  const data: T = await fetch(url)
     .then((response) => {
-      return response.json();
+      return response.json() as Promise<T>;
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
       return Promise.reject('invalid-json');
     });
 
   return data;
 }
 
-export async function getJSONLocal(
-  url: string
-): Promise<Record<string, unknown>> {
+export async function getJSONLocal<T>(url: string): Promise<T> {
   try {
-    return JSON.parse(fs.readFileSync(url, 'utf8'));
+    return JSON.parse(fs.readFileSync(url, 'utf8')) as Promise<T>;
   } catch (error) {
     console.log(error);
     return Promise.reject('invalid-json');

@@ -1,38 +1,43 @@
 {
-  "name": "sg-lottery-scrapper",
-  "version": "3.0.0",
-  "main": "index.js",
+  "name": "sg-lottery-scraper",
+  "version": "3.1.0",
+  "exports": "./index.js",
+  "license": "MIT",
+  "author": "Amos Tan <hello@amostan.me>",
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
-    "@types/node": "^14.14.0",
-    "@types/node-fetch": "^2.5.7",
-    "@types/puppeteer": "^5.4.2",
-    "@types/yargs": "^15.0.12",
-    "@typescript-eslint/eslint-plugin": "^3.9.0",
-    "@typescript-eslint/parser": "^3.9.0",
-    "eslint": "^7.16.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-import": "^2.6.1",
-    "eslint-plugin-prettier": "^3.1.4",
-    "eslint-plugin-simple-import-sort": "^5.0.3",
-    "prettier": "^2.0.5",
-    "ts-node": "^8.10.2",
-    "typescript": "^3.9.7"
+    "@types/lodash": "^4.14.178",
+    "@types/node": "^16.11.11",
+    "@types/node-fetch": "^3.0.3",
+    "@types/puppeteer": "^5.4.4",
+    "@types/yargs": "^17.0.7",
+    "@typescript-eslint/eslint-plugin": "^5.5.0",
+    "@typescript-eslint/parser": "^5.5.0",
+    "eslint": "^8.4.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "prettier": "^2.5.1",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.2"
   },
   "dependencies": {
-    "dotenv": "^8.2.0",
-    "firebase-admin": "^8.12.0",
-    "node-fetch": "^2.6.1",
-    "puppeteer": "^5.5.0",
-    "yargs": "^16.2.0"
+    "dotenv": "^10.0.0",
+    "firebase-admin": "^10.0.0",
+    "lodash": "^4.17.21",
+    "node-fetch": "^3.1.0",
+    "puppeteer": "^11.0.0"
   },
   "scripts": {
     "start": "node dist/scrape.js",
-    "develop": "ts-node src/scrape.ts",
-    "start:silent": "node dist/scrape.js -s",
-    "develop:silent": "ts-node src/scrape.ts -s",
-    "firebase": "ts-node src/utils/sendFirebase.ts",
+    "firebase": "node dist/sendFirebase.js",
+    "dev:scrape": "ts-node src/scrape.ts",
+    "dev:firebase": "ts-node src/sendFirebase.ts",
     "build": "tsc --outDir dist",
-    "clean": "rm -Rf dist/ && rm -Rf temp/"
+    "clean": "rm -Rf dist/ && rm -Rf temp/ && rm -rf output/"
+  },
+  "engines": {
+    "node": ">=14.13.1"
   }
 }

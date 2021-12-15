@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash';
 /**
  * @param new_list lottery results retrieved from scrapping
  * @param old_list lottery results retrieved from server
@@ -7,9 +8,9 @@
  * Returns: a list of keys which differ from the 2 lists
  */
 
-export default function getListKeyDifference(
-  new_list: Record<string, unknown>,
-  old_list: Record<string, unknown>
+export default function getListKeyDifference<T>(
+  new_list: T,
+  old_list: T
 ): string[] {
   const different_list = [];
 
@@ -22,16 +23,16 @@ export default function getListKeyDifference(
     for (const key in new_list) {
       different_list.push(key);
     }
-  } else {
-    for (const key in new_list) {
-      if (JSON.stringify(new_list[key]) !== JSON.stringify(old_list[key])) {
-        console.log(`[${key}]: Fetched new data`);
-        different_list.push(key);
-      } else {
-        console.log(`[${key}]: No difference`);
-      }
-    }
+    return different_list;
   }
 
+  for (const key in new_list) {
+    if (!isEqual(new_list[key], old_list[key])) {
+      console.log(`[${key}]: Fetched new data`);
+      different_list.push(key);
+    } else {
+      console.log(`[${key}]: No difference`);
+    }
+  }
   return different_list;
 }
