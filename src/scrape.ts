@@ -1,8 +1,11 @@
 import dotenv from 'dotenv';
 import puppeteer, { Browser } from 'puppeteer';
 
-import singapore from './sources/singapore';
-import { SingaporeLottery } from './sources/singapore/model';
+import singapore, { singaporeUpcomingDates } from './sources/singapore';
+import {
+  SingaporeLottery,
+  SingaporeUpcomingDatesModel,
+} from './sources/singapore/model';
 import { writeStore } from './utils/output';
 import { getJSON } from './utils/networking';
 
@@ -25,15 +28,27 @@ async function writeServerFile<T>(fileName: string): Promise<void> {
 }
 
 async function processSingapore(browser: Browser) {
-  const fileName = 'sg_lottery.json';
+  const fileNameResults = 'sg_lottery.json';
+  const fileNameDates = 'sg_upcoming_dates.json';
   try {
     isProduction || isTesting
-      ? await writeServerFile<SingaporeLottery>(fileName)
+      ? await writeServerFile<SingaporeLottery>(fileNameResults)
       : null;
 
+    const upcomingDates = await singaporeUpcomingDates(browser);
     const singaporeResults = await singapore(browser);
     notificationList.push(...singaporeResults.topics);
-    writeStore<SingaporeLottery>(fileName, singaporeResults.results, 'upload');
+
+    writeStore<SingaporeLottery>(
+      fileNameResults,
+      singaporeResults.results,
+      'upload'
+    );
+    writeStore<SingaporeUpcomingDatesModel>(
+      fileNameDates,
+      upcomingDates,
+      'upload'
+    );
   } catch (error) {
     console.error(error);
   }

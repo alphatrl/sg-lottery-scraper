@@ -8,6 +8,8 @@ import getListKeyDifference from '../../utils/compareList';
 import { readStore } from '../../utils/output';
 import { FirebaseTopic } from '../model';
 
+export { default as singaporeUpcomingDates } from './upcomingDates';
+
 const isProduction = process.env.NODE_ENV === 'production';
 const fileName = 'sg_lottery.json';
 

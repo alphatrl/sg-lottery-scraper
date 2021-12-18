@@ -27,6 +27,12 @@ export interface SweepModel {
   twoD: number[];
 }
 
+export interface SingaporeUpcomingDatesModel {
+  FourD: number;
+  Toto: number;
+  Sweep: number;
+}
+
 export interface SingaporeLottery {
   FourD: FourDModel[];
   Toto: TotoModel[];
