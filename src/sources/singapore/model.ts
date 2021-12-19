@@ -13,6 +13,13 @@ export interface TotoModel {
   drawDate: number;
   winning: number[];
   additional: number;
+  winningShares: TotoPrizeShareModel[];
+}
+
+export interface TotoPrizeShareModel {
+  group: string;
+  prizeAmount: number;
+  count: number;
 }
 
 export interface SweepModel {

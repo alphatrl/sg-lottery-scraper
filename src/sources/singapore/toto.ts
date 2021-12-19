@@ -1,4 +1,5 @@
 import { Browser } from 'puppeteer';
+import { TotoModel, TotoPrizeShareModel } from './model';
 
 /**
  * @param {import('puppeteer').Browser} browser
@@ -6,9 +7,7 @@ import { Browser } from 'puppeteer';
  *
  * Scrape Sweep results from Singapore Pools
  */
-export default async function toto(
-  browser: Browser
-): Promise<Record<string, unknown>[] | []> {
+export default async function toto(browser: Browser): Promise<TotoModel[]> {
   const page = await browser.newPage();
   const response = await page
     .goto(
@@ -49,11 +48,38 @@ export default async function toto(
           item.querySelector('.additional').textContent.trim()
         );
 
+        // get winning shares information
+        const winningShares: TotoPrizeShareModel[] = [];
+        const parseWinningString = /[^\d\.]/g;
+        const winningSharesNode = item.querySelector('.tableWinningShares');
+        // remove element header and column title
+        const winningSharesRows = [
+          ...winningSharesNode.querySelectorAll('tr'),
+        ].slice(2);
+
+        for (const row of winningSharesRows) {
+          const columns = [...row.querySelectorAll('td')];
+          const groupName = columns[0].textContent.trim();
+          const prizeAmt = columns[1].textContent
+            .trim()
+            .replace(parseWinningString, '');
+          const count = columns[2].textContent
+            .trim()
+            .replace(parseWinningString, '');
+
+          winningShares.push({
+            group: groupName,
+            prizeAmount: Number(prizeAmt) || 0,
+            count: Number(count) || 0,
+          });
+        }
+
         return {
           drawNo: drawNo,
           drawDate: drawDate,
           winning: winning,
           additional: additional,
+          winningShares: winningShares,
         };
       });
     })
