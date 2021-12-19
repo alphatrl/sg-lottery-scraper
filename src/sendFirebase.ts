@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
-import { ScraperTopics } from './sources/model';
 
+import { ScraperTopics } from './sources/model';
 import { default as Firebase } from './utils/firebase';
 import { readStore } from './utils/output';
 

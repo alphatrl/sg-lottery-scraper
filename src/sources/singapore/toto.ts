@@ -1,4 +1,5 @@
 import { Browser } from 'puppeteer';
+
 import { TotoModel, TotoPrizeShareModel } from './model';
 
 /**

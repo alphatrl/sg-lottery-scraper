@@ -1,4 +1,5 @@
 import { Browser } from 'puppeteer';
+
 import { SweepModel } from './model';
 
 /**
