@@ -1,5 +1,5 @@
-import fs from 'fs';
 import dotenv from 'dotenv';
+import fs from 'fs';
 import path from 'path';
 
 const DIRECTORY_DIST_TEMP = path.join(process.cwd(), 'temp');

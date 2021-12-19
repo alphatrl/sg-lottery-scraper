@@ -6,8 +6,8 @@ import {
   SingaporeLottery,
   SingaporeLotteryModel,
 } from './sources/singapore/model';
-import { writeStore } from './utils/output';
 import { getJSON } from './utils/networking';
+import { writeStore } from './utils/output';
 
 dotenv.config();
 
