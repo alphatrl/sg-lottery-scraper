@@ -1,4 +1,5 @@
 import { Browser } from 'puppeteer';
+import { FourDModel } from './model';
 
 /**
  * @param {import('puppeteer').Browser} browser
@@ -6,9 +7,7 @@ import { Browser } from 'puppeteer';
  *
  * Scrape 4D results from Singapore Pools
  */
-export default async function fourD(
-  browser: Browser
-): Promise<Record<string, unknown>[] | []> {
+export default async function fourD(browser: Browser): Promise<FourDModel[]> {
   const page = await browser.newPage();
   const response = await page
     .goto('http://www.singaporepools.com.sg/en/product/Pages/4d_results.aspx', {

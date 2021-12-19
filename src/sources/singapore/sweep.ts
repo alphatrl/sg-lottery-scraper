@@ -1,4 +1,5 @@
 import { Browser } from 'puppeteer';
+import { SweepModel } from './model';
 
 /**
  * @param {import('puppeteer').Browser} browser
@@ -6,9 +7,7 @@ import { Browser } from 'puppeteer';
  *
  * Scrape Sweep results from Singapore Pools
  */
-export default async function sweep(
-  browser: Browser
-): Promise<Record<string, unknown>[] | []> {
+export default async function sweep(browser: Browser): Promise<SweepModel[]> {
   const page = await browser.newPage();
   const response = await page
     .goto(
