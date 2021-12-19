@@ -30,9 +30,9 @@ export default async function sweep(browser: Browser): Promise<SweepModel[]> {
         const drawNo = Number(
           item.querySelector('.drawNumber').textContent.trim().split(' ')[2]
         );
-        const drawDate = Date.parse(
-          item.querySelector('.drawDate').textContent.trim()
-        );
+
+        const rawDrawDate = item.querySelector('.drawDate').textContent.trim();
+        const drawDate = Date.parse(`${rawDrawDate} GMT+0800`);
 
         const winning = [
           Number(item.querySelector('.valueFirstPrize').textContent.trim()),

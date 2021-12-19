@@ -42,7 +42,7 @@ async function processSingapore(browser: Browser) {
 
     writeStore<SingaporeLotteryModel>(
       `v1/${fileName}`,
-      { results: data.results, upcomingDates: data.upcomingDates },
+      { upcomingDates: data.upcomingDates, results: data.results },
       'upload'
     );
   } catch (error) {

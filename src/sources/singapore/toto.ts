@@ -31,9 +31,9 @@ export default async function toto(browser: Browser): Promise<TotoModel[]> {
         const drawNo = Number(
           item.querySelector('.drawNumber').textContent.trim().split(' ')[2]
         );
-        const drawDate = Date.parse(
-          item.querySelector('.drawDate').textContent.trim()
-        );
+
+        const rawDrawDate = item.querySelector('.drawDate').textContent.trim();
+        const drawDate = Date.parse(`${rawDrawDate} GMT+0800`);
 
         const winning = [
           Number(item.querySelector('.win1').textContent.trim()),

@@ -1,4 +1,5 @@
 import { Browser } from 'puppeteer';
+
 import { SingaporeUpcomingDatesModel } from './model';
 
 /**
@@ -39,7 +40,7 @@ export default async function upcomingDates(
 
       // remove the ', ' from "Sat, 18 Dec 2021, 6.30pm"
       const dateArray = dateString.split(', ');
-      return Date.parse(dateArray[1]);
+      return Date.parse(`${dateArray[1]} 18:30:00 GMT+0800`);
     });
 
     return results;
