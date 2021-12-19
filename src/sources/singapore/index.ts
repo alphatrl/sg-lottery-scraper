@@ -1,14 +1,17 @@
 import { Browser } from 'puppeteer';
 
-import FourD from './fourD';
-import Toto from './toto';
-import Sweep from './sweep';
-import { SingaporeLottery, SingaporeLotteryRaw } from './model';
 import getListKeyDifference from '../../utils/compareList';
 import { readStore } from '../../utils/output';
 import { FirebaseTopic } from '../model';
-
-export { default as singaporeUpcomingDates } from './upcomingDates';
+import FourD from './fourD';
+import {
+  SingaporeLottery,
+  SingaporeLotteryAndTopics,
+  SingaporeLotteryModel,
+} from './model';
+import Sweep from './sweep';
+import Toto from './toto';
+import { default as singaporeUpcomingDates } from './upcomingDates';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const fileName = 'sg_lottery.json';
@@ -60,16 +63,21 @@ const prepareTopic = (topics: string[]): FirebaseTopic[] => {
 
 export default async function singapore(
   browser: Browser
-): Promise<SingaporeLotteryRaw> {
+): Promise<SingaporeLotteryAndTopics> {
   console.log('---------- Singapore ----------');
-  const prevList = readStore<SingaporeLottery>(fileName);
+  const upcomingDates = await singaporeUpcomingDates(browser);
+  const prevList = readStore<SingaporeLotteryModel>(`v1/${fileName}`);
   const lottery = await getLottery(browser);
-  const difference = getListKeyDifference<SingaporeLottery>(lottery, prevList);
+  const difference = getListKeyDifference<SingaporeLottery>(
+    lottery,
+    prevList?.results || {}
+  );
   const topicList = prepareTopic(difference);
   console.log('---------- Singapore [Fin] ----------');
 
   return {
     results: lottery,
+    upcomingDates: upcomingDates,
     topics: topicList,
   };
 }

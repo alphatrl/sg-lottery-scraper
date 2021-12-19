@@ -46,7 +46,11 @@ export interface SingaporeLottery {
   Sweep: SweepModel[];
 }
 
-export interface SingaporeLotteryRaw {
+export interface SingaporeLotteryModel {
   results: SingaporeLottery;
+  upcomingDates: SingaporeUpcomingDatesModel;
+}
+
+export interface SingaporeLotteryAndTopics extends SingaporeLotteryModel {
   topics: FirebaseTopic[];
 }
