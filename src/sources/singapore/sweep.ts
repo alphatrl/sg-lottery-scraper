@@ -1,14 +1,14 @@
 import { Browser } from 'puppeteer';
 
+import { SweepModel } from './model';
+
 /**
  * @param {import('puppeteer').Browser} browser
  * @returns Promise(list)
  *
  * Scrape Sweep results from Singapore Pools
  */
-export default async function sweep(
-  browser: Browser
-): Promise<Record<string, unknown>[] | []> {
+export default async function sweep(browser: Browser): Promise<SweepModel[]> {
   const page = await browser.newPage();
   const response = await page
     .goto(
@@ -31,9 +31,9 @@ export default async function sweep(
         const drawNo = Number(
           item.querySelector('.drawNumber').textContent.trim().split(' ')[2]
         );
-        const drawDate = Date.parse(
-          item.querySelector('.drawDate').textContent.trim()
-        );
+
+        const rawDrawDate = item.querySelector('.drawDate').textContent.trim();
+        const drawDate = Date.parse(`${rawDrawDate} GMT+0800`);
 
         const winning = [
           Number(item.querySelector('.valueFirstPrize').textContent.trim()),

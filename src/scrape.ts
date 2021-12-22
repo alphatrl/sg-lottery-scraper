@@ -2,9 +2,12 @@ import dotenv from 'dotenv';
 import puppeteer, { Browser } from 'puppeteer';
 
 import singapore from './sources/singapore';
-import { SingaporeLottery } from './sources/singapore/model';
-import { writeStore } from './utils/output';
+import {
+  SingaporeLottery,
+  SingaporeLotteryModel,
+} from './sources/singapore/model';
 import { getJSON } from './utils/networking';
+import { writeStore } from './utils/output';
 
 dotenv.config();
 
@@ -28,12 +31,20 @@ async function processSingapore(browser: Browser) {
   const fileName = 'sg_lottery.json';
   try {
     isProduction || isTesting
-      ? await writeServerFile<SingaporeLottery>(fileName)
+      ? await writeServerFile<SingaporeLottery>(`v1/${fileName}`)
       : null;
 
-    const singaporeResults = await singapore(browser);
-    notificationList.push(...singaporeResults.topics);
-    writeStore<SingaporeLottery>(fileName, singaporeResults.results, 'upload');
+    const data = await singapore(browser);
+    notificationList.push(...data.topics);
+
+    // backwards compatibility with huat-mobile v1
+    writeStore<SingaporeLottery>(fileName, data.results, 'upload');
+
+    writeStore<SingaporeLotteryModel>(
+      `v1/${fileName}`,
+      { upcomingDates: data.upcomingDates, results: data.results },
+      'upload'
+    );
   } catch (error) {
     console.error(error);
   }
@@ -49,7 +60,6 @@ const createTopicsFile = () => {
   const scraperTopics = {
     topics: notificationList,
   };
-
   writeStore(fileName, scraperTopics);
 };
 

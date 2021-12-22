@@ -1,4 +1,5 @@
 import { default as admin } from 'firebase-admin';
+
 import { FirebaseTopic } from '../sources/model';
 
 /**

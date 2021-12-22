@@ -1,8 +1,8 @@
-import fs from 'fs';
 import dotenv from 'dotenv';
+import fs from 'fs';
 import path from 'path';
 
-const DIRECTORY_DIST_TEMP = path.join(process.cwd(), 'temp', '');
+const DIRECTORY_DIST_TEMP = path.join(process.cwd(), 'temp');
 const DIRECTORY_DIST_UPLOAD = path.join(process.cwd(), 'output');
 
 dotenv.config();
@@ -10,10 +10,12 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 try {
   fs.mkdirSync(DIRECTORY_DIST_TEMP);
+  fs.mkdirSync(`${DIRECTORY_DIST_TEMP}/v1`);
 } catch (e) {}
 
 try {
   fs.mkdirSync(DIRECTORY_DIST_UPLOAD);
+  fs.mkdirSync(`${DIRECTORY_DIST_UPLOAD}/v1`);
 } catch (e) {}
 
 export function readStore<T>(fileName: string, type = 'temp'): T {

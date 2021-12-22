@@ -10,7 +10,7 @@ import { isEqual } from 'lodash';
 
 export default function getListKeyDifference<T>(
   new_list: T,
-  old_list: T
+  old_list: T | Record<string, unknown>
 ): string[] {
   const different_list = [];
 

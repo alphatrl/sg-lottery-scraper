@@ -13,6 +13,13 @@ export interface TotoModel {
   drawDate: number;
   winning: number[];
   additional: number;
+  winningShares: TotoPrizeShareModel[];
+}
+
+export interface TotoPrizeShareModel {
+  group: string;
+  prizeAmount: number;
+  count: number;
 }
 
 export interface SweepModel {
@@ -27,13 +34,23 @@ export interface SweepModel {
   twoD: number[];
 }
 
+export interface SingaporeUpcomingDatesModel {
+  FourD: number;
+  Toto: number;
+  Sweep: number;
+}
+
 export interface SingaporeLottery {
   FourD: FourDModel[];
   Toto: TotoModel[];
   Sweep: SweepModel[];
 }
 
-export interface SingaporeLotteryRaw {
+export interface SingaporeLotteryModel {
   results: SingaporeLottery;
+  upcomingDates: SingaporeUpcomingDatesModel;
+}
+
+export interface SingaporeLotteryAndTopics extends SingaporeLotteryModel {
   topics: FirebaseTopic[];
 }

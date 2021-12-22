@@ -1,14 +1,14 @@
 import { Browser } from 'puppeteer';
 
+import { FourDModel } from './model';
+
 /**
  * @param {import('puppeteer').Browser} browser
  * @returns Promise(list)
  *
  * Scrape 4D results from Singapore Pools
  */
-export default async function fourD(
-  browser: Browser
-): Promise<Record<string, unknown>[] | []> {
+export default async function fourD(browser: Browser): Promise<FourDModel[]> {
   const page = await browser.newPage();
   const response = await page
     .goto('http://www.singaporepools.com.sg/en/product/Pages/4d_results.aspx', {
@@ -30,9 +30,9 @@ export default async function fourD(
         const drawNo = Number(
           item.querySelector('.drawNumber').textContent.trim().split(' ')[2]
         );
-        const drawDate = Date.parse(
-          item.querySelector('.drawDate').textContent.trim()
-        );
+
+        const rawDrawDate = item.querySelector('.drawDate').textContent.trim();
+        const drawDate = Date.parse(`${rawDrawDate} GMT+0800`);
 
         const winning = [
           Number(item.querySelector('.tdFirstPrize').textContent.trim()),
