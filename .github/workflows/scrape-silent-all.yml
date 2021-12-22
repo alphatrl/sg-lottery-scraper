@@ -14,7 +14,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '14'
-
         run: yarn install
         run: yarn build
 
@@ -23,6 +22,7 @@ jobs:
           NODE_ENV: production
           SILENT: true
           SERVER_URL: ${{ secrets.SERVER_URL }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: yarn start
 
       - name: Deploy to Github Pages

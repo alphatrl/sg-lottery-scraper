@@ -14,7 +14,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '14'
-
         run: yarn install
         run: yarn build
 
@@ -22,6 +21,7 @@ jobs:
         env:
           NODE_ENV: testing
           SERVER_URL: ${{ secrets.SERVER_URL }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: yarn start
 
       - name: Deploy to Github Pages
@@ -42,4 +42,5 @@ jobs:
           FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
           FIREBASE_DATABASE_URL: ${{ secrets.FIREBASE_DATABASE_URL }}
           FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: yarn firebase
