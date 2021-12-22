@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/node';
 import dotenv from 'dotenv';
 
 import { ScraperTopics } from './sources/model';
@@ -6,9 +7,17 @@ import { readStore } from './utils/output';
 
 dotenv.config();
 
+const { SENTRY_DSN, SILENT } = process.env;
+
+if (SENTRY_DSN) {
+  Sentry.init({
+    dsn: SENTRY_DSN,
+  });
+}
+
 const firebase = new Firebase();
 const fileName = 'topics.json';
-const isSilent = process.env.SILENT === 'true';
+const isSilent = SILENT === 'true';
 
 const main = async () => {
   if (isSilent) {
