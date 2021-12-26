@@ -24,16 +24,6 @@ jobs:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: yarn start
 
-      - name: Deploy to Github Pages
-        if: success()
-        uses: crazy-max/ghaction-github-pages@v2
-        with:
-          target_branch: gh-pages
-          build_dir: output
-          commit_message: 'chore: deploy to GitHub Pages'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Send Push Notification
         if: success()
         env: 
