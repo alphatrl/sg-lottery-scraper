@@ -39,6 +39,6 @@
     "clean": "rm -Rf dist/ && rm -Rf temp/ && rm -rf output/"
   },
   "engines": {
-    "node": ">=14.13.1"
+    "node": ">=18.0.0"
   }
 }
