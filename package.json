@@ -6,7 +6,7 @@
   "author": "Amos Tan <hello@amostan.me>",
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
-    "@types/lodash": "^4.14.178",
+    "@types/lodash": "^4.17.0",
     "@types/node": "^20.12.5",
     "@types/node-fetch": "^2.6.11",
     "@types/puppeteer": "^5.4.4",
