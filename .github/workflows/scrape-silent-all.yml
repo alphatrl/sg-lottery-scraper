@@ -10,10 +10,10 @@ jobs:
         with:
           ref: production
 
-      - name: Use Node 18
+      - name: Use Node 20
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
       - run: yarn install
       - run: yarn build
 
