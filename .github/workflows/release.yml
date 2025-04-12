@@ -3,6 +3,9 @@ name: Release to Production Branch
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   release:
     name: Release to `production` branch
@@ -10,9 +13,53 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
 
-      - name: Use Node 18
+      - name: Use Node 20
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: 20
       - run: yarn install --production=false
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"  
+          # user email for github-actions[bot] is found in https://api.github.com/users/github-actions%5Bbot%5D
+      
+      - name: Bump version number
+        id: new_version_number
+        run: |
+          export RECOMMENDED_BUMP="$(yarn -s conventional-recommended-bump -p angular)"
+          echo "Recommended bump: $RECOMMENDED_BUMP"
+          npm --commit-hooks=false --git-tag-version=false version $RECOMMENDED_BUMP
+          export VERSION=$(jq -r '.version' package.json)
+          echo "version=$(echo $VERSION)" >> $GITHUB_OUTPUT
+          echo "New version: $VERSION"
+
+      - name: Generate Changelog (CHANGELOG.MD)
+        id: changelog
+        run: |
+          yarn changelog
+          git add CHANGELOG.md
+          npm \
+            --allow-same-version \
+            --force \
+            --message "build(deploy): Bump to v${{ steps.new_version_number.outputs.version }}" \
+            version ${{ steps.new_version_number.outputs.version }}
+
+      - name: Generate latest changelog (CHANGELOG_LATEST.md)
+        run: yarn changelog:latest
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: CHANGELOG_LATEST.md
+          draft: false
+          prerelease: false
+          generate_release_notes: false
+          name: "v${{ steps.new_version_number.outputs.version }}"
+          tag_name: "v${{ steps.new_version_number.outputs.version }}"
+
