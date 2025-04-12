@@ -63,3 +63,8 @@ jobs:
           name: "v${{ steps.new_version_number.outputs.version }}"
           tag_name: "v${{ steps.new_version_number.outputs.version }}"
 
+      - name: Push to `production` branch
+        run: |
+          git checkout production
+          git rebase master
+          git push origin production
