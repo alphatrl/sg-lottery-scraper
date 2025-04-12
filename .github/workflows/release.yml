@@ -39,11 +39,6 @@ jobs:
           echo "version=$(echo $VERSION)" >> $GITHUB_OUTPUT
           echo "New version: $VERSION"
 
-      - name: Push changelog
-        run: |
-          git push origin master
-          git push origin v${{ steps.new_version_number.outputs.version }}
-
       - name: Generate Changelog (CHANGELOG.MD)
         id: changelog
         run: |
@@ -54,6 +49,11 @@ jobs:
             --force \
             --message "build(deploy): Bump to v${{ steps.new_version_number.outputs.version }}" \
             version ${{ steps.new_version_number.outputs.version }}
+
+      - name: Push changelog
+        run: |
+          git push origin master
+          git push origin v${{ steps.new_version_number.outputs.version }}
 
       - name: Generate latest changelog (CHANGELOG_LATEST.md)
         run: yarn changelog:latest
