@@ -1,6 +1,5 @@
 import fs from 'fs';
 
-import { fetch } from './fetch';
 
 /**
  * @param url JSON URL
