@@ -77,15 +77,11 @@ const createTopicsFile = () => {
 
 const main = async () => {
   console.log(`[INFO]: Current Environment - ${process.env.NODE_ENV}`);
-  const isARMMac = process.arch === 'arm64' && process.platform === 'darwin';
 
   // start puppeteer
   const browser = await puppeteer.launch({
     headless: isProduction || isTesting,
     args: isProduction || isTesting ? ['--no-sandbox'] : [],
-    executablePath: isARMMac
-      ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-      : undefined,
   });
 
   await processSingapore(browser);
