@@ -5,6 +5,23 @@
   "exports": "./index.js",
   "license": "MIT",
   "author": "Amos Tan <hello@amostan.me>",
+  "scripts": {
+    "start": "node dist/scrape.js",
+    "firebase": "node dist/sendFirebase.js",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 1 -u",
+    "changelog:latest": "conventional-changelog -p angular -i CHANGELOG_LATEST.md -s -r 2",
+    "dev:scrape": "ts-node src/scrape.ts",
+    "dev:firebase": "ts-node src/sendFirebase.ts",
+    "build": "rm -Rf dist/ && tsc -outDir dist",
+    "clean": "rm -Rf dist/ && rm -Rf temp/ && rm -rf output/"
+  },
+  "dependencies": {
+    "@sentry/node": "^6.16.1",
+    "dotenv": "^10.0.0",
+    "firebase-admin": "^10.0.0",
+    "lodash": "^4.17.21",
+    "puppeteer": "^24.6.1"
+  },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
     "@types/lodash": "^4.14.178",
@@ -23,23 +40,6 @@
     "prettier": "^2.5.1",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.2"
-  },
-  "dependencies": {
-    "@sentry/node": "^6.16.1",
-    "dotenv": "^10.0.0",
-    "firebase-admin": "^10.0.0",
-    "lodash": "^4.17.21",
-    "puppeteer": "^24.6.1"
-  },
-  "scripts": {
-    "start": "node dist/scrape.js",
-    "firebase": "node dist/sendFirebase.js",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 1 -u",
-    "changelog:latest": "conventional-changelog -p angular -i CHANGELOG_LATEST.md -s -r 2",
-    "dev:scrape": "ts-node src/scrape.ts",
-    "dev:firebase": "ts-node src/sendFirebase.ts",
-    "build": "rm -Rf dist/ && tsc -outDir dist",
-    "clean": "rm -Rf dist/ && rm -Rf temp/ && rm -rf output/"
   },
   "engines": {
     "node": ">=20"
