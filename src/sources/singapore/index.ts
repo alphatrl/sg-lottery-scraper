@@ -1,6 +1,7 @@
 import { Browser } from 'puppeteer';
 
 import getListKeyDifference from '../../utils/compareList';
+import { featureFlags } from '../../utils/featureFlags';
 import { readStore } from '../../utils/output';
 import { FirebaseTopic } from '../model';
 import FourD from './fourD';
@@ -13,7 +14,6 @@ import Sweep from './sweep';
 import Toto from './toto';
 import { default as singaporeUpcomingDates } from './upcomingDates';
 
-const isProduction = process.env.NODE_ENV === 'production';
 const fileName = 'sg_lottery.json';
 
 const DICT_KEY = {
@@ -52,7 +52,7 @@ const prepareTopic = (topics: string[]): FirebaseTopic[] => {
   for (const key of topics) {
     if (key in DICT_KEY) {
       topicList.push({
-        topic: isProduction ? key : `${key}-Test`,
+        topic: featureFlags.IS_PRODUCTION ? key : `${key}-Test`,
         title: `${DICT_KEY[key]} Results`,
         body: 'See the latest results',
       });

@@ -7,7 +7,7 @@ import { readStore } from './utils/output';
 
 dotenv.config();
 
-const { SENTRY_DSN, SILENT } = process.env;
+const { SENTRY_DSN } = process.env;
 
 if (SENTRY_DSN) {
   Sentry.init({
@@ -17,15 +17,8 @@ if (SENTRY_DSN) {
 
 const firebase = new Firebase();
 const fileName = 'topics.json';
-const isSilent = SILENT === 'true';
 
 const main = async () => {
-  if (isSilent) {
-    console.log('SILENT! Not sending Firebase Topics');
-    await firebase.exit();
-    return;
-  }
-
   // read details from firebase file
   const topicsFile = readStore<ScraperTopics>(fileName);
   const topics = topicsFile?.topics;

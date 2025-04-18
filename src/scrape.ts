@@ -7,12 +7,13 @@ import {
   SingaporeLottery,
   SingaporeLotteryModel,
 } from './sources/singapore/model';
+import { featureFlags } from './utils/featureFlags';
 import { getJSON } from './utils/networking';
 import { writeStore } from './utils/output';
 
 dotenv.config();
 
-const { NODE_ENV, SENTRY_DSN, SERVER_URL } = process.env;
+const { SENTRY_DSN, SERVER_URL } = process.env;
 
 if (SENTRY_DSN) {
   Sentry.init({
@@ -20,8 +21,8 @@ if (SENTRY_DSN) {
   });
 }
 
-const isProduction = NODE_ENV === 'production';
-const isTesting = NODE_ENV === 'testing';
+// const isProduction = NODE_ENV === 'production';
+// const isTesting = NODE_ENV === 'testing';
 const notificationList = [];
 
 async function writeServerFile<T>(fileName: string): Promise<void> {
@@ -41,7 +42,7 @@ async function writeServerFile<T>(fileName: string): Promise<void> {
 async function processSingapore(browser: Browser) {
   const fileName = 'sg_lottery.json';
   try {
-    isProduction || isTesting
+    featureFlags.IS_CI
       ? await writeServerFile<SingaporeLottery>(`v1/${fileName}`)
       : null;
 
@@ -80,8 +81,8 @@ const main = async () => {
 
   // start puppeteer
   const browser = await puppeteer.launch({
-    headless: isProduction || isTesting,
-    args: isProduction || isTesting ? ['--no-sandbox'] : [],
+    headless: featureFlags.IS_CI,
+    args: featureFlags.IS_CI ? ['--no-sandbox'] : [],
   });
 
   await processSingapore(browser);
