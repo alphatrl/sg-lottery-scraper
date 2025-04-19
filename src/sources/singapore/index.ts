@@ -66,7 +66,9 @@ export default async function singapore(
 ): Promise<SingaporeLotteryAndTopics> {
   console.log('---------- Singapore ----------');
   const upcomingDates = await singaporeUpcomingDates(browser);
-  const prevList = readStore<SingaporeLotteryModel>(`v1/${fileName}`);
+  const prevList = readStore<SingaporeLotteryModel>({
+    fileName: `v1/${fileName}`,
+  });
   const lottery = await getLottery(browser);
   const difference = getListKeyDifference<SingaporeLottery>(
     lottery,

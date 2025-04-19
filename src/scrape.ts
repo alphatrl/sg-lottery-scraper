@@ -9,9 +9,10 @@ import {
 } from './sources/singapore/model';
 import { featureFlags } from './utils/featureFlags';
 import { getJSON } from './utils/networking';
-import { writeStore } from './utils/output';
+import { setupStore, writeStore } from './utils/output';
 
 dotenv.config();
+setupStore();
 
 const { SENTRY_DSN, SERVER_URL } = process.env;
 
@@ -21,8 +22,6 @@ if (SENTRY_DSN) {
   });
 }
 
-// const isProduction = NODE_ENV === 'production';
-// const isTesting = NODE_ENV === 'testing';
 const notificationList = [];
 
 async function writeServerFile<T>(fileName: string): Promise<void> {
@@ -35,7 +34,7 @@ async function writeServerFile<T>(fileName: string): Promise<void> {
   });
 
   Object.keys(list).length > 0
-    ? writeStore(fileName, list)
+    ? writeStore({ fileName, data: list })
     : console.warn('[WARN]: Skipping file creation');
 }
 
@@ -50,13 +49,17 @@ async function processSingapore(browser: Browser) {
     notificationList.push(...data.topics);
 
     // backwards compatibility with huat-mobile v1
-    writeStore<SingaporeLottery>(fileName, data.results, 'upload');
+    writeStore<SingaporeLottery>({
+      fileName,
+      data: data.results,
+      type: 'upload',
+    });
 
-    writeStore<SingaporeLotteryModel>(
-      `v1/${fileName}`,
-      { upcomingDates: data.upcomingDates, results: data.results },
-      'upload'
-    );
+    writeStore<SingaporeLotteryModel>({
+      fileName: `v1/${fileName}`,
+      data: { upcomingDates: data.upcomingDates, results: data.results },
+      type: 'upload',
+    });
   } catch (error) {
     console.error(error);
     Sentry?.captureException(error);
@@ -73,7 +76,7 @@ const createTopicsFile = () => {
   const scraperTopics = {
     topics: notificationList,
   };
-  writeStore(fileName, scraperTopics);
+  writeStore({ fileName, data: scraperTopics });
 };
 
 const main = async () => {

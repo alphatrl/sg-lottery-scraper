@@ -20,7 +20,7 @@ const fileName = 'topics.json';
 
 const main = async () => {
   // read details from firebase file
-  const topicsFile = readStore<ScraperTopics>(fileName);
+  const topicsFile = readStore<ScraperTopics>({ fileName });
   const topics = topicsFile?.topics;
 
   if (!topics) {
