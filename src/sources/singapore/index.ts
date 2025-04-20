@@ -1,7 +1,7 @@
 import { Browser } from 'puppeteer';
 
+import { featureFlags } from '../../constants/featureFlags';
 import getListKeyDifference from '../../utils/compareList';
-import { featureFlags } from '../../utils/featureFlags';
 import { readStore } from '../../utils/output';
 import { FirebaseTopic } from '../model';
 import { SG_FILE_NAME } from './constants';

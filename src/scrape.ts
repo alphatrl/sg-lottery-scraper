@@ -2,12 +2,12 @@ import * as Sentry from '@sentry/node';
 import dotenv from 'dotenv';
 import puppeteer, { Browser } from 'puppeteer';
 
+import { featureFlags } from './constants/featureFlags';
 import singapore from './sources/singapore';
 import {
   SingaporeLottery,
   SingaporeLotteryModel,
 } from './sources/singapore/model';
-import { featureFlags } from './utils/featureFlags';
 import { getJSON } from './utils/networking';
 import { setupStore, writeStore } from './utils/output';
 

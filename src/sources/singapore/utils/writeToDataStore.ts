@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { writeStore } from '../../../utils/output';
+import { featureFlags } from '../../../constants/featureFlags';
 import {
   SG_POOLS_4D_DIR,
   SG_POOLS_DIR,
@@ -9,7 +9,6 @@ import {
   SG_POOLS_TOTO_DIR,
 } from '../constants';
 import { FourDModel, SingaporeLottery, SweepModel, TotoModel } from '../model';
-import { featureFlags } from '../../../utils/featureFlags';
 
 function setupStore() {
   if (!fs.existsSync(SG_POOLS_DIR)) {

@@ -1,13 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 
+import { featureFlags } from '../constants/featureFlags';
 import {
   DATA_DIR,
   HUAT_V2_COMPAT_DATA_DIR,
   TEMP_DIR,
   UPLOAD_DIR,
 } from '../constants/filePath';
-import { featureFlags } from './featureFlags';
 
 type OutputType = 'temp' | 'upload' | 'data';
 
