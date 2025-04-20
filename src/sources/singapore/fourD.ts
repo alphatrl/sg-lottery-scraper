@@ -15,7 +15,7 @@ export default async function fourD(browser: Browser): Promise<FourDModel[]> {
       waitUntil: 'networkidle0',
     })
     .catch(async (error: Error) => {
-      console.error('[ERROR]: Problem loading 4D page \n', error);
+      console.error('❌ Problem loading 4D page \n', error);
     });
 
   if (!response) {
@@ -71,7 +71,7 @@ export default async function fourD(browser: Browser): Promise<FourDModel[]> {
     });
 
   if (results.length === 0) {
-    console.error('[ERROR]: Problem loading 4D page');
+    console.error('❌ Problem loading 4D page');
     console.error(
       'data:image/png;base64,' +
         (await page.screenshot({ encoding: 'base64', fullPage: true }))

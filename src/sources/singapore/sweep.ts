@@ -18,7 +18,7 @@ export default async function sweep(browser: Browser): Promise<SweepModel[]> {
       }
     )
     .catch(async (error: Error) => {
-      console.log('[ERROR]: Problem loading SWEEP page \n', error);
+      console.log('❌ Problem loading SWEEP page \n', error);
     });
 
   if (!response) {
@@ -93,9 +93,9 @@ export default async function sweep(browser: Browser): Promise<SweepModel[]> {
     });
 
   if (results.length === 0) {
-    console.error('[ERROR]: Problem loading SWEEP page');
+    console.error('❌ Problem loading SWEEP page');
     console.error(
-      '[ERROR]: Problem loading SWEEP page' +
+      '❌ Problem loading SWEEP page' +
         'data:image/png;base64,' +
         (await page.screenshot({ encoding: 'base64', fullPage: true }))
     );

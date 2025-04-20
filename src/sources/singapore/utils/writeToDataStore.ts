@@ -65,11 +65,11 @@ export default function writeToDataStore(lottery: SingaporeLottery) {
 
   for (const result of [...fourDList, ...totoList, ...sweepList]) {
     const filePath = getFilePath(result);
+    const lotteryType = getLotteryType(result);
+
     if (fs.existsSync(filePath)) {
-      console.log(
-        `[${getLotteryType(result)} - ${
-          result.drawNo
-        }] already exists, skipping...`
+      console.info(
+        `ℹ️ [${lotteryType}] Draw No. "${result.drawNo}" already exists. Skipping.`
       );
       continue;
     }

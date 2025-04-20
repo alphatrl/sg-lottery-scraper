@@ -27,16 +27,16 @@ const notificationList = [];
 
 async function writeServerFile<T>(fileName: string): Promise<void> {
   const url = `${SERVER_URL}/${fileName}`;
-  console.log(`Retrieving ${fileName}.json from ${url}`);
+  console.info(`ℹ️ Retrieving ${fileName}.json from ${url}`);
   const list = await getJSON<T>(url).catch((error) => {
-    console.error(`[ERROR]: \'${fileName}\` does not exists in server`);
+    console.error(`❌ "${fileName}" does not exists on server`);
     Sentry?.captureException(error);
     return {};
   });
 
   Object.keys(list).length > 0
     ? writeStore({ fileName, data: list })
-    : console.warn('[WARN]: Skipping file creation');
+    : console.warn('ℹ️ Skipping file creation');
 }
 
 async function processSingapore(browser: Browser) {
@@ -47,6 +47,7 @@ async function processSingapore(browser: Browser) {
 
     const data = await singapore(browser);
     notificationList.push(...data.topics);
+    console.groupEnd();
 
     // backwards compatibility with huat-mobile v1
     writeStore<SingaporeLottery>({
@@ -80,7 +81,7 @@ const createTopicsFile = () => {
 };
 
 const main = async () => {
-  console.log(`[INFO]: Current Environment - ${process.env.NODE_ENV}`);
+  console.info(`ℹ️ Current Environment - ${process.env.NODE_ENV}`);
 
   // start puppeteer
   const browser = await puppeteer.launch({
@@ -88,9 +89,11 @@ const main = async () => {
     args: featureFlags.IS_CI ? ['--no-sandbox'] : [],
   });
 
+  console.group('🇸🇬 Singapore');
   await processSingapore(browser);
-  await browser.close();
+  console.groupEnd();
 
+  await browser.close();
   createTopicsFile();
 };
 

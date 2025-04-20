@@ -19,7 +19,7 @@ export default function getListKeyDifference<T>(
   // if old_list dont exist, for example, the code is init
   // for the first time and the server is empty...
   if (Object.keys(old_list).length === 0) {
-    console.log('[INFO] Previous JSON does not exist. Starting anew');
+    console.log('ℹ️ Previous JSON does not exist. Starting anew');
     for (const key in new_list) {
       different_list.push(key);
     }
