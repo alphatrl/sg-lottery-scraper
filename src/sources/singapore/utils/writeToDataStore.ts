@@ -8,7 +8,18 @@ import {
   SG_POOLS_SWEEP_DIR,
   SG_POOLS_TOTO_DIR,
 } from '../constants';
-import { FourDModel, SingaporeLottery, SweepModel, TotoModel } from '../model';
+import {
+  FourDModel,
+  SingaporeLottery,
+  SingaporeUpcomingDatesModel,
+  SweepModel,
+  TotoModel,
+} from '../model';
+
+interface Options {
+  lottery: SingaporeLottery;
+  upcomingDates: SingaporeUpcomingDatesModel;
+}
 
 function setupStore() {
   if (!fs.existsSync(SG_POOLS_DIR)) {
@@ -56,7 +67,8 @@ function getFilePath(lottery: FourDModel | TotoModel | SweepModel) {
   }
 }
 
-export default function writeToDataStore(lottery: SingaporeLottery) {
+export default function writeToDataStore(options: Options) {
+  const { lottery, upcomingDates } = options;
   setupStore();
 
   const fourDList = lottery.FourD;
@@ -79,4 +91,21 @@ export default function writeToDataStore(lottery: SingaporeLottery) {
       JSON.stringify(result, null, featureFlags.IS_PRODUCTION ? 0 : 2)
     );
   }
+
+  // NOTE: Convert to upcoming dates to camelCase
+  const upcomingDatesFilePath = path.join(SG_POOLS_DIR, 'upcoming_dates.json');
+  const convertedUpcomingDates = {
+    fourD: upcomingDates.FourD,
+    toto: upcomingDates.Toto,
+    sweep: upcomingDates.Sweep,
+  };
+
+  fs.writeFileSync(
+    upcomingDatesFilePath,
+    JSON.stringify(
+      convertedUpcomingDates,
+      null,
+      featureFlags.IS_PRODUCTION ? 0 : 2
+    )
+  );
 }

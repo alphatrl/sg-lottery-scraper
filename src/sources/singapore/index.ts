@@ -65,13 +65,16 @@ export default async function singapore(
   browser: Browser
 ): Promise<SingaporeLotteryAndTopics> {
   console.log('---------- Singapore ----------');
-  const upcomingDates = await singaporeUpcomingDates(browser);
   const prevList = readStore<SingaporeLotteryModel>({
     fileName: `v1/${SG_FILE_NAME}`,
   });
-  const lottery = await getLottery(browser);
-  writeToDataStore(lottery);
 
+  const [upcomingDates, lottery] = await Promise.all([
+    singaporeUpcomingDates(browser),
+    getLottery(browser),
+  ]);
+
+  writeToDataStore({ lottery, upcomingDates });
   const difference = getListKeyDifference<SingaporeLottery>(
     lottery,
     prevList?.results || {}
