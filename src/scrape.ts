@@ -41,9 +41,9 @@ async function writeServerFile<T>(fileName: string): Promise<void> {
 async function processSingapore(browser: Browser) {
   const fileName = 'sg_lottery.json';
   try {
-    featureFlags.IS_CI
-      ? await writeServerFile<SingaporeLottery>(`v1/${fileName}`)
-      : null;
+    if (featureFlags.IS_CI) {
+      await writeServerFile<SingaporeLottery>(`v1/${fileName}`);
+    }
 
     const data = await singapore(browser);
     notificationList.push(...data.topics);

@@ -4,10 +4,6 @@ import path from 'path';
 import {
   DATA_DIR,
   HUAT_V2_COMPAT_DATA_DIR,
-  SG_POOLS_4D_DIR,
-  SG_POOLS_DIR,
-  SG_POOLS_SWEEP_DIR,
-  SG_POOLS_TOTO_DIR,
   TEMP_DIR,
   UPLOAD_DIR,
 } from '../constants/filePath';
@@ -54,26 +50,6 @@ export function setupStore() {
   if (!fs.existsSync(HUAT_V2_COMPAT_DATA_DIR)) {
     console.log('Creating `temp/v1` directory');
     fs.mkdirSync(HUAT_V2_COMPAT_DATA_DIR);
-  }
-
-  if (!fs.existsSync(SG_POOLS_DIR)) {
-    console.log('Creating `data/singapore/singaporePools` directory');
-    fs.mkdirSync(SG_POOLS_DIR, { recursive: true });
-  }
-
-  if (!fs.existsSync(SG_POOLS_4D_DIR)) {
-    console.log('Creating `data/singapore/singaporePools/fourD` directory');
-    fs.mkdirSync(SG_POOLS_4D_DIR, { recursive: true });
-  }
-
-  if (!fs.existsSync(SG_POOLS_TOTO_DIR)) {
-    console.log('Creating `data/singapore/singaporePools/toto` directory');
-    fs.mkdirSync(SG_POOLS_TOTO_DIR, { recursive: true });
-  }
-
-  if (!fs.existsSync(SG_POOLS_SWEEP_DIR)) {
-    console.log('Creating `data/singapore/singaporePools/sweep` directory');
-    fs.mkdirSync(SG_POOLS_SWEEP_DIR, { recursive: true });
   }
 }
 

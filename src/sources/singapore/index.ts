@@ -4,6 +4,7 @@ import getListKeyDifference from '../../utils/compareList';
 import { featureFlags } from '../../utils/featureFlags';
 import { readStore } from '../../utils/output';
 import { FirebaseTopic } from '../model';
+import { SG_FILE_NAME } from './constants';
 import FourD from './fourD';
 import {
   SingaporeLottery,
@@ -13,8 +14,7 @@ import {
 import Sweep from './sweep';
 import Toto from './toto';
 import { default as singaporeUpcomingDates } from './upcomingDates';
-
-const fileName = 'sg_lottery.json';
+import writeToDataStore from './utils/writeToDataStore';
 
 const DICT_KEY = {
   FourD: '4D',
@@ -33,9 +33,9 @@ const getLottery = async (browser: Browser): Promise<SingaporeLottery> => {
     Object.keys(sweep).length === 0
   ) {
     [fourD, toto, sweep] = await Promise.all([
-      await FourD(browser),
-      await Toto(browser),
-      await Sweep(browser),
+      FourD(browser),
+      Toto(browser),
+      Sweep(browser),
     ]);
   }
 
@@ -67,14 +67,17 @@ export default async function singapore(
   console.log('---------- Singapore ----------');
   const upcomingDates = await singaporeUpcomingDates(browser);
   const prevList = readStore<SingaporeLotteryModel>({
-    fileName: `v1/${fileName}`,
+    fileName: `v1/${SG_FILE_NAME}`,
   });
   const lottery = await getLottery(browser);
+  writeToDataStore(lottery);
+
   const difference = getListKeyDifference<SingaporeLottery>(
     lottery,
     prevList?.results || {}
   );
   const topicList = prepareTopic(difference);
+
   console.log('---------- Singapore [Fin] ----------');
 
   return {
