@@ -1,6 +1,6 @@
 import { Browser } from 'puppeteer';
 
-import { SweepModel } from './model';
+import { SweepModel } from '../model';
 
 /**
  * @param {import('puppeteer').Browser} browser

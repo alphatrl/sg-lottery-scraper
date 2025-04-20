@@ -1,6 +1,6 @@
 import { Browser } from 'puppeteer';
 
-import { SingaporeUpcomingDatesModel } from './model';
+import { SingaporeUpcomingDatesModel } from '../model';
 
 /**
  * @param {import('puppeteer').Browser} browser

@@ -1,6 +1,6 @@
 import { Browser } from 'puppeteer';
 
-import { TotoModel, TotoPrizeShareModel } from './model';
+import { TotoModel, TotoPrizeShareModel } from '../model';
 
 /**
  * @param {import('puppeteer').Browser} browser

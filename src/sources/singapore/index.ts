@@ -5,15 +5,15 @@ import getListKeyDifference from '../../utils/compareList';
 import { readStore } from '../../utils/output';
 import { FirebaseTopic } from '../model';
 import { SG_FILE_NAME } from './constants';
-import FourD from './fourD';
 import {
   SingaporeLottery,
   SingaporeLotteryAndTopics,
   SingaporeLotteryModel,
 } from './model';
-import Sweep from './sweep';
-import Toto from './toto';
-import { default as singaporeUpcomingDates } from './upcomingDates';
+import FourD from './utils/fourD';
+import Sweep from './utils/sweep';
+import Toto from './utils/toto';
+import { default as singaporeUpcomingDates } from './utils/upcomingDates';
 import writeToDataStore from './utils/writeToDataStore';
 
 const DICT_KEY = {

@@ -1,6 +1,6 @@
 import { Browser } from 'puppeteer';
 
-import { FourDModel } from './model';
+import { FourDModel } from '../model';
 
 /**
  * @param {import('puppeteer').Browser} browser
