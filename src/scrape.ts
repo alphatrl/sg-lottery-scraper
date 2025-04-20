@@ -4,6 +4,7 @@ import puppeteer, { Browser } from 'puppeteer';
 
 import { featureFlags } from './constants/featureFlags';
 import singapore from './sources/singapore';
+import { SG_FILE_NAME } from './sources/singapore/constants';
 import {
   SingaporeLottery,
   SingaporeLotteryModel,
@@ -39,10 +40,9 @@ async function writeServerFile<T>(fileName: string): Promise<void> {
 }
 
 async function processSingapore(browser: Browser) {
-  const fileName = 'sg_lottery.json';
   try {
     if (featureFlags.IS_CI) {
-      await writeServerFile<SingaporeLottery>(`v1/${fileName}`);
+      await writeServerFile<SingaporeLottery>(`v1/${SG_FILE_NAME}`);
     }
 
     const data = await singapore(browser);
@@ -50,13 +50,13 @@ async function processSingapore(browser: Browser) {
 
     // backwards compatibility with huat-mobile v1
     writeStore<SingaporeLottery>({
-      fileName,
+      fileName: SG_FILE_NAME,
       data: data.results,
       type: 'upload',
     });
 
     writeStore<SingaporeLotteryModel>({
-      fileName: `v1/${fileName}`,
+      fileName: `v1/${SG_FILE_NAME}`,
       data: { upcomingDates: data.upcomingDates, results: data.results },
       type: 'upload',
     });
@@ -68,7 +68,7 @@ async function processSingapore(browser: Browser) {
 
 /**
  * write to a file containing a list of push notifications to send to the server later
- * we dont want to send push notification and have the server serve outdated info
+ * we don't want to send push notification and have the server serve outdated info
  * in case github workflows take too long
  */
 const createTopicsFile = () => {
