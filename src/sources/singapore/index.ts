@@ -69,10 +69,9 @@ export default async function singapore(
     fileName: `v1/${SG_FILE_NAME}`,
   });
 
-  const [upcomingDates, lottery] = await Promise.all([
-    singaporeUpcomingDates(browser),
-    getLottery(browser),
-  ]);
+  // NOTE: (hello@amostan.me) To prevent multiple browser tabs from appearing at once
+  const upcomingDates = await singaporeUpcomingDates(browser);
+  const lottery = await getLottery(browser);
 
   writeToDataStore({ lottery, upcomingDates });
   const difference = getListKeyDifference<SingaporeLottery>(
