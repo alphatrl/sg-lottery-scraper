@@ -1,20 +1,20 @@
 import { Browser } from 'puppeteer';
 
+import { featureFlags } from '../../constants/featureFlags';
 import getListKeyDifference from '../../utils/compareList';
 import { readStore } from '../../utils/output';
 import { FirebaseTopic } from '../model';
-import FourD from './fourD';
+import { SG_FILE_NAME } from './constants';
 import {
   SingaporeLottery,
   SingaporeLotteryAndTopics,
   SingaporeLotteryModel,
 } from './model';
-import Sweep from './sweep';
-import Toto from './toto';
-import { default as singaporeUpcomingDates } from './upcomingDates';
-
-const isProduction = process.env.NODE_ENV === 'production';
-const fileName = 'sg_lottery.json';
+import FourD from './utils/fourD';
+import Sweep from './utils/sweep';
+import Toto from './utils/toto';
+import { default as singaporeUpcomingDates } from './utils/upcomingDates';
+import writeToDataStore from './utils/writeToDataStore';
 
 const DICT_KEY = {
   FourD: '4D',
@@ -33,9 +33,9 @@ const getLottery = async (browser: Browser): Promise<SingaporeLottery> => {
     Object.keys(sweep).length === 0
   ) {
     [fourD, toto, sweep] = await Promise.all([
-      await FourD(browser),
-      await Toto(browser),
-      await Sweep(browser),
+      FourD(browser),
+      Toto(browser),
+      Sweep(browser),
     ]);
   }
 
@@ -52,7 +52,7 @@ const prepareTopic = (topics: string[]): FirebaseTopic[] => {
   for (const key of topics) {
     if (key in DICT_KEY) {
       topicList.push({
-        topic: isProduction ? key : `${key}-Test`,
+        topic: featureFlags.IS_PRODUCTION ? key : `${key}-Test`,
         title: `${DICT_KEY[key]} Results`,
         body: 'See the latest results',
       });
@@ -65,14 +65,21 @@ export default async function singapore(
   browser: Browser
 ): Promise<SingaporeLotteryAndTopics> {
   console.log('---------- Singapore ----------');
+  const prevList = readStore<SingaporeLotteryModel>({
+    fileName: `v1/${SG_FILE_NAME}`,
+  });
+
+  // NOTE: (hello@amostan.me) To prevent multiple browser tabs from appearing at once
   const upcomingDates = await singaporeUpcomingDates(browser);
-  const prevList = readStore<SingaporeLotteryModel>(`v1/${fileName}`);
   const lottery = await getLottery(browser);
+
+  writeToDataStore({ lottery, upcomingDates });
   const difference = getListKeyDifference<SingaporeLottery>(
     lottery,
     prevList?.results || {}
   );
   const topicList = prepareTopic(difference);
+
   console.log('---------- Singapore [Fin] ----------');
 
   return {

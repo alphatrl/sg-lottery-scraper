@@ -17,14 +17,15 @@ jobs:
 
       - name: Scrape data from ALL sources
         env:
-          NODE_ENV: testing
+          IS_CI: true
+          NODE_ENV: staging
           SERVER_URL: ${{ secrets.SERVER_URL }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: yarn start
 
       - name: Send Push Notification
         if: success()
-        env: 
+        env:
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
           FIREBASE_PRIVATE_KEY_ID: ${{ secrets.FIREBASE_PRIVATE_KEY_ID }}
           FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}

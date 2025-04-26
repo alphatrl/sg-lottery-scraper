@@ -1,6 +1,5 @@
 import fs from 'fs';
 
-
 /**
  * @param url JSON URL
  * @return Promise(JSON)

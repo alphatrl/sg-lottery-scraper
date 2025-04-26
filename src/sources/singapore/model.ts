@@ -54,3 +54,12 @@ export interface SingaporeLotteryModel {
 export interface SingaporeLotteryAndTopics extends SingaporeLotteryModel {
   topics: FirebaseTopic[];
 }
+
+export interface SingaporeLatestLottery {
+  updatedOn: number;
+  singaporePools: {
+    fourD: FourDModel['drawNo'];
+    toto: TotoModel['drawNo'];
+    sweep: SweepModel['drawNo'];
+  };
+}

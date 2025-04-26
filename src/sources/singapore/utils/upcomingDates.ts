@@ -1,6 +1,6 @@
 import { Browser } from 'puppeteer';
 
-import { SingaporeUpcomingDatesModel } from './model';
+import { SingaporeUpcomingDatesModel } from '../model';
 
 /**
  * @param {import('puppeteer').Browser} browser
@@ -18,10 +18,7 @@ export default async function upcomingDates(
       waitUntil: 'networkidle0',
     })
     .catch(async (error: Error) => {
-      console.error(
-        '[ERROR]: Problem loading Singapore Pools Home Page \n',
-        error
-      );
+      console.error('❌ Problem loading Singapore Pools Home Page \n', error);
     });
 
   if (!response) {

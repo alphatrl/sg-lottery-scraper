@@ -1,6 +1,6 @@
 import { Browser } from 'puppeteer';
 
-import { TotoModel, TotoPrizeShareModel } from './model';
+import { TotoModel, TotoPrizeShareModel } from '../model';
 
 /**
  * @param {import('puppeteer').Browser} browser
@@ -18,7 +18,7 @@ export default async function toto(browser: Browser): Promise<TotoModel[]> {
       }
     )
     .catch(async (error: Error) => {
-      console.error('[ERROR]: Problem loading Toto page \n', error);
+      console.error('❌ Problem loading Toto page \n', error);
     });
 
   if (!response) {
@@ -90,7 +90,7 @@ export default async function toto(browser: Browser): Promise<TotoModel[]> {
     });
 
   if (results.length === 0) {
-    console.error('[ERROR]: Problem loading TOTO page');
+    console.error('❌ Problem loading TOTO page');
     console.error(
       'data:image/png;base64,' +
         (await page.screenshot({ encoding: 'base64', fullPage: true }))
