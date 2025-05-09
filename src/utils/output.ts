@@ -5,6 +5,7 @@ import { featureFlags } from '../constants/featureFlags';
 import {
   DATA_DIR,
   HUAT_V2_COMPAT_DATA_DIR,
+  HUAT_V2_COMPAT_TEMP_DIR,
   TEMP_DIR,
   UPLOAD_DIR,
 } from '../constants/filePath';
@@ -47,8 +48,13 @@ export function setupStore() {
     fs.mkdirSync(UPLOAD_DIR);
   }
 
-  if (!fs.existsSync(HUAT_V2_COMPAT_DATA_DIR)) {
+  if (!fs.existsSync(HUAT_V2_COMPAT_TEMP_DIR)) {
     console.log('Creating `temp/v1` directory');
+    fs.mkdirSync(HUAT_V2_COMPAT_TEMP_DIR);
+  }
+
+  if (!fs.existsSync(HUAT_V2_COMPAT_DATA_DIR)) {
+    console.log('Creating `upload/v1` directory');
     fs.mkdirSync(HUAT_V2_COMPAT_DATA_DIR);
   }
 }
