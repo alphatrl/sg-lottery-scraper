@@ -7,6 +7,12 @@ on:
         required: true
         type: boolean
         default: true
+        description: 'Send push notification after scraping'
+      skip_notification_check:
+        required: false
+        type: boolean
+        default: false
+        description: 'Skip notification check'
 
 jobs:
   scrape:
@@ -28,6 +34,7 @@ jobs:
           NODE_ENV: staging
           SERVER_URL: ${{ secrets.SERVER_URL }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          SKIP_NOTIFICATION_CHECK: ${{ contains(inputs.skip_notification_check, 'true') }}
         run: yarn start
 
       - name: Send Push Notification
