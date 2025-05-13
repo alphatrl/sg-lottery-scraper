@@ -1,6 +1,13 @@
 name: scrape-all
 on:
   workflow_dispatch:
+    inputs:
+      send_notification:
+        required: true
+        type: boolean
+        default: true
+        description: 'Send push notification after scraping'
+
   schedule:
     - cron: '45 10 * * 0,1,2,3,4,5,6' # run everyday on 18:45 GMT+8
     - cron: '00 11 * * 0,1,2,3,4,5,6' # run everyday on 19:00 GMT+8
@@ -14,6 +21,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: production
+
+      - name: Consume input variables
+        id: input_vars
+        run: |
+          echo "send_notification=${{ inputs.send_notification || 'true' }}" >> $GITHUB_ENV
 
       - name: Use Node 20
         uses: actions/setup-node@v4
@@ -40,7 +52,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Send Push Notification
-        if: success()
+        if: ${{ success() && contains(github.env.send_notification, 'true') }}
         env: 
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
           FIREBASE_PRIVATE_KEY_ID: ${{ secrets.FIREBASE_PRIVATE_KEY_ID }}
