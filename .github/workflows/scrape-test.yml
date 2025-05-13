@@ -38,7 +38,7 @@ jobs:
         run: yarn start
 
       - name: Send Push Notification
-        if: ${{ success()  && contains(inputs.send_notification, 'true') }}
+        if: ${{ success() && contains(inputs.send_notification, 'true') }}
         env:
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
           FIREBASE_PRIVATE_KEY_ID: ${{ secrets.FIREBASE_PRIVATE_KEY_ID }}
