@@ -36,6 +36,7 @@ jobs:
 
       - name: Scrape data from ALL sources
         env:
+          IS_CI: true
           NODE_ENV: production
           SERVER_URL: ${{ secrets.SERVER_URL }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
