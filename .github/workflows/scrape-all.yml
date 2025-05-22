@@ -22,10 +22,19 @@ jobs:
         with:
           ref: production
 
-      - name: Consume input variables
-        id: input_vars
+      - name: Set `workflow_dispatch` env variables variables
+        if: github.event_name == 'workflow_dispatch'
         run: |
-          echo "send_notification=${{ inputs.send_notification || 'true' }}" >> $GITHUB_ENV
+          echo "send_notification=${{ inputs.send_notification }}" >> $GITHUB_ENV
+
+      - name: Set env default variables
+        if: github.event_name != 'workflow_dispatch'
+        run: |
+          echo "send_notification=true" >> $GITHUB_ENV
+
+      - name: Echo env variables
+        run: |
+          echo "Notification Enabled: ${{ env.send_notification }}"
 
       - name: Use Node 20
         uses: actions/setup-node@v4
@@ -53,7 +62,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Send Push Notification
-        if: ${{ success() && contains(github.env.send_notification, 'true') }}
+        if: ${{ success() && env.send_notification == 'true' }}
         env: 
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
           FIREBASE_PRIVATE_KEY_ID: ${{ secrets.FIREBASE_PRIVATE_KEY_ID }}
