@@ -11,6 +11,7 @@ on:
   schedule:
     - cron: '45 10 * * 0,1,2,3,4,5,6' # run everyday on 18:45 GMT+8
     - cron: '00 11 * * 0,1,2,3,4,5,6' # run everyday on 19:00 GMT+8
+    - cron: '30 14 * * 0,1,2,3,4,5,6' # please remove
     - cron: '45 13 * * 1,4' # run on 21:45 GMT+8 at Monday and Thursday (Toto Cascade Draw)
     - cron: '00 14 * * 1,4' # run on 22:00 GMT+8 at Monday and Thursday (Toto Cascade Draw)
 jobs:
