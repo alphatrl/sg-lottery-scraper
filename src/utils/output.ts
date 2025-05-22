@@ -23,10 +23,9 @@ interface WriteOptions<T> extends Options {
 
 function getDirectoryPath(type: OutputType): string {
   switch (type) {
-    case 'upload':
-      return UPLOAD_DIR;
     case 'temp':
       return TEMP_DIR;
+    case 'upload':
     case 'data':
       return DATA_DIR;
   }
@@ -54,7 +53,7 @@ export function setupStore() {
   }
 
   if (!fs.existsSync(HUAT_V2_COMPAT_DATA_DIR)) {
-    console.log('Creating `upload/v1` directory');
+    console.log('Creating `data/v1` directory');
     fs.mkdirSync(HUAT_V2_COMPAT_DATA_DIR);
   }
 }
