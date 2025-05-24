@@ -21,7 +21,7 @@ jobs:
         with:
           ref: ${{ inputs.branch_name }}
       - name: Install dependencies
-        uses: './github/actions/install-project-dependencies'
+        uses: './.github/actions/install-project-dependencies'
 
       - name: Scrape data from ALL sources
         env:
