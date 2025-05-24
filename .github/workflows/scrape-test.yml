@@ -8,37 +8,76 @@ on:
         type: boolean
         default: true
         description: 'Send push notification after scraping'
-      skip_notification_check:
-        required: false
-        type: boolean
-        default: false
-        description: 'Skip notification check'
 
 jobs:
-  scrape:
+  general-setup:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      send_notification: ${{ steps.send_notification.outputs.SEND_NOTIFICATION }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - name: Get send_notification variable
+        id: send_notification
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "SEND_NOTIFICATION=${{ inputs.send_notification }}" >> $GITHUB_OUTPUT
+          else
+            echo "SEND_NOTIFICATION=true" >> $GITHUB_OUTPUT
+          fi
+      - run: |
+          echo "NOTIFICATION ENABLED: ${{ steps.send_notification.outputs.SEND_NOTIFICATION }}"
 
-      - name: Use Node 20
-        uses: actions/setup-node@v4
+  scrape-singapore:
+    needs:
+      - general-setup
+    uses: './.github/workflows/run-scraper.yml'
+    secrets: inherit
+    with:
+      node_env: staging
+      branch_name: ${{ github.sha }}
+
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs:
+      - general-setup
+      - scrape-singapore
+    steps:
+      - uses: actions/download-artifact@v4
         with:
-          node-version: '20'
-      - run: yarn install
-      - run: yarn build
+          name: data-${{ github.run_id }}
+      - name: List `data` directory
+        run: |
+          cd ./data
+          ls -R
 
-      - name: Scrape data from ALL sources
-        env:
-          IS_CI: true
-          NODE_ENV: staging
-          SERVER_URL: ${{ secrets.SERVER_URL }}
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          SKIP_NOTIFICATION_CHECK: ${{ contains(inputs.skip_notification_check, 'true') }}
-        run: yarn start
+  send-push-notification:
+    runs-on: ubuntu-latest
+    needs:
+      - general-setup
+      - scrape-singapore
+      - publish
+    steps:
+      - name: Check if push notification should be send
+        run: |
+          echo "send_notification value: ${{ needs.general-setup.outputs.send_notification }}"
+          if [[ "${{ needs.general-setup.outputs.send_notification }}" != true ]]; then
+            echo "Terminating send-push-notification."
+            exit 1
+          fi
+      
+      - uses: actions/download-artifact@v4
+        with:
+          name: topics-${{ github.run_id }}
+          path: temp
+
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        uses: './github/actions/install-project-dependencies'
 
       - name: Send Push Notification
-        if: ${{ success() && contains(inputs.send_notification, 'true') }}
+        run: yarn firebase
         env:
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
           FIREBASE_PRIVATE_KEY_ID: ${{ secrets.FIREBASE_PRIVATE_KEY_ID }}
@@ -46,4 +85,3 @@ jobs:
           FIREBASE_DATABASE_URL: ${{ secrets.FIREBASE_DATABASE_URL }}
           FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-        run: yarn firebase
