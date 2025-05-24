@@ -53,13 +53,13 @@ async function processSingapore(browser: Browser) {
     writeStore<SingaporeLottery>({
       fileName: SG_FILE_NAME,
       data: data.results,
-      type: 'upload',
+      type: 'data',
     });
 
     writeStore<SingaporeLotteryModel>({
       fileName: `v1/${SG_FILE_NAME}`,
       data: { upcomingDates: data.upcomingDates, results: data.results },
-      type: 'upload',
+      type: 'data',
     });
   } catch (error) {
     console.error(error);

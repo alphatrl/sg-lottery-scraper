@@ -1,0 +1,49 @@
+name: Run Scraper
+on:
+  workflow_call:
+    inputs:
+      branch_name:
+        required: false
+        type: string
+        default: production
+      node_env:
+        required: false
+        type: string
+        default: production
+
+
+jobs:    
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch_name }}
+      - name: Install dependencies
+        uses: './github/actions/install-project-dependencies'
+
+      - name: Scrape data from ALL sources
+        env:
+          IS_CI: true
+          NODE_ENV: ${{ inputs.node_env }}
+          SERVER_URL: ${{ secrets.SERVER_URL }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        run: yarn start
+
+      - name: Upload Lottery Results
+        if: ${{ success() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: data-${{ github.run_id }}
+          path: 'data'
+          retention-days: 30
+
+      - name: Upload Push Notification File
+        if: ${{ success() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: topics-${{ github.run_id }}
+          path: 'temp/topics.json'
+          retention-days: 1
+
