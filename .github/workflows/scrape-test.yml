@@ -82,7 +82,7 @@ jobs:
 
       - uses: actions/checkout@v4
       - name: Install dependencies
-        uses: './github/actions/install-project-dependencies'
+        uses: './.github/actions/install-project-dependencies'
 
       - name: Send Push Notification
         if: steps.check_file.outputs.exist == 'true'
