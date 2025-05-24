@@ -71,12 +71,21 @@ jobs:
         with:
           name: topics-${{ github.run_id }}
           path: temp
+      - name: Check if `topics.json` exist
+        id: check_file
+        run: |
+          if [ -f "temp/topics.json" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
 
       - uses: actions/checkout@v4
       - name: Install dependencies
         uses: './github/actions/install-project-dependencies'
 
       - name: Send Push Notification
+        if: steps.check_file.outputs.exist == 'true'
         run: yarn firebase
         env:
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
