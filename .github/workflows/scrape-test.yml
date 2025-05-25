@@ -58,7 +58,7 @@ jobs:
 
   send-push-notification:
     runs-on: ubuntu-latest
-    if: needs.general-setup.outputs.send_notification != 'true'
+    if: needs.general-setup.outputs.send_notification == 'true'
     needs:
       - general-setup
       - scrape-singapore
