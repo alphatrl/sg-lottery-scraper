@@ -64,6 +64,10 @@ jobs:
       - scrape-singapore
       - publish-test
     steps:      
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        uses: './.github/actions/install-project-dependencies'
+
       - uses: actions/download-artifact@v4
         with:
           name: topics-${{ github.run_id }}
@@ -79,12 +83,7 @@ jobs:
             ls -l
           fi
       - run: |
-          echo "temp.json exist: ${{ steps.check_file.outputs.TOPICS_FILE_EXIST }}"
-
-      - uses: actions/checkout@v4
-        if: steps.check_file.outputs.TOPICS_FILE_EXIST == 'true'
-      - name: Install dependencies
-        uses: './.github/actions/install-project-dependencies'
+          echo "temp/topics.json exist: ${{ steps.check_file.outputs.TOPICS_FILE_EXIST }}"
 
       - name: Send Push Notification
         if: steps.check_file.outputs.TOPICS_FILE_EXIST == 'true'
