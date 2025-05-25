@@ -49,8 +49,7 @@ jobs:
           name: data-${{ github.run_id }}
       - name: List `data` directory
         run: |
-          cd ./data
-          ls -R
+          ls -l
 
   send-push-notification:
     runs-on: ubuntu-latest
