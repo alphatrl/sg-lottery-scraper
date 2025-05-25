@@ -58,18 +58,12 @@ jobs:
 
   send-push-notification:
     runs-on: ubuntu-latest
+    if: needs.general-setup.outputs.send_notification != 'true'
     needs:
       - general-setup
       - scrape-singapore
       - publish-test
-    steps:
-      - name: Check if push notification should be send
-        run: |
-          if [[ "${{ needs.general-setup.outputs.send_notification }}" != true ]]; then
-            echo "Terminating send-push-notification."
-            exit 1
-          fi
-      
+    steps:      
       - uses: actions/download-artifact@v4
         with:
           name: topics-${{ github.run_id }}
@@ -79,8 +73,10 @@ jobs:
         run: |
           if [ -f "temp/topics.json" ]; then
             echo "TOPICS_FILE_EXIST=true" >> $GITHUB_OUTPUT
+            ls -l temp
           else
             echo "TOPICS_FILE_EXIST=false" >> $GITHUB_OUTPUT
+            ls -l
           fi
       - run: |
           echo "temp.json exist: ${{ steps.check_file.outputs.TOPICS_FILE_EXIST }}"

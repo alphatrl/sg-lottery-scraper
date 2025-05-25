@@ -23,7 +23,7 @@ const main = async () => {
   const topicsFile = readStore<ScraperTopics>({ fileName });
   const topics = topicsFile?.topics;
 
-  if (!topics) {
+  if (topics == null) {
     throw `[Firebase]: ${fileName} is not found`;
   }
 

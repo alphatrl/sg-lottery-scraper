@@ -64,6 +64,7 @@ export function readStore<T>(options: Options): T {
   const filePath = path.join(dirPath, fileName);
 
   if (!fs.existsSync(filePath)) {
+    console.error(`❌ "${filePath}" does not exist`);
     return {} as T;
   }
   const data = fs.readFileSync(filePath, {
