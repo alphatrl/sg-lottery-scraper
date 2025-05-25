@@ -37,30 +37,34 @@ jobs:
       node_env: staging
       branch_name: ${{ github.sha }}
 
-  publish:
+  publish-test:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs:
       - general-setup
       - scrape-singapore
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: "gh-pages"
       - uses: actions/download-artifact@v4
         with:
           name: data-${{ github.run_id }}
+
       - name: List `data` directory
-        run: |
-          ls -l
+        run: ls -l
+      - name: Track file changes with git
+        run: git status
 
   send-push-notification:
     runs-on: ubuntu-latest
     needs:
       - general-setup
       - scrape-singapore
-      - publish
+      - publish-test
     steps:
       - name: Check if push notification should be send
         run: |
-          echo "send_notification value: ${{ needs.general-setup.outputs.send_notification }}"
           if [[ "${{ needs.general-setup.outputs.send_notification }}" != true ]]; then
             echo "Terminating send-push-notification."
             exit 1
@@ -74,17 +78,20 @@ jobs:
         id: check_file
         run: |
           if [ -f "temp/topics.json" ]; then
-            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "TOPICS_FILE_EXIST=true" >> $GITHUB_OUTPUT
           else
-            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "TOPICS_FILE_EXIST=false" >> $GITHUB_OUTPUT
           fi
+      - run: |
+          echo "temp.json exist: ${{ steps.check_file.outputs.TOPICS_FILE_EXIST }}"
 
       - uses: actions/checkout@v4
+        if: steps.check_file.outputs.TOPICS_FILE_EXIST == 'true'
       - name: Install dependencies
         uses: './.github/actions/install-project-dependencies'
 
       - name: Send Push Notification
-        if: steps.check_file.outputs.exist == 'true'
+        if: steps.check_file.outputs.TOPICS_FILE_EXIST == 'true'
         run: yarn firebase
         env:
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
