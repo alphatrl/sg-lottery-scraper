@@ -26,6 +26,12 @@ jobs:
       - name: Install dependencies
         uses: './.github/actions/install-project-dependencies'
 
+      - name: Print input variables
+        run: |
+          echo "BRANCH_NAME: ${{ inputs.branch_name }}"
+          echo "NODE_ENV: ${{ inputs.node_env }}"
+          echo "SKIP_NOTIFICATION_CHECK: ${{ inputs.skip_notification_check }}"
+
       - name: Scrape data from ALL sources
         env:
           IS_CI: true
