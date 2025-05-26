@@ -1,0 +1,39 @@
+name: Send Push Notifications
+on:
+  workflow_call:
+
+jobs:
+  send-notifications:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        uses: './.github/actions/install-project-dependencies'
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: topics-${{ github.run_id }}
+          path: temp
+      - name: Check if `topics.json` exist
+        id: check_file
+        run: |
+          if [ -f "temp/topics.json" ]; then
+              echo "TOPICS_FILE_EXIST=true" >> $GITHUB_OUTPUT
+              ls -l temp
+              echo "TOPICS_FILE_EXIST=false" >> $GITHUB_OUTPUT
+              ls -l
+            fi
+      - run: |
+          echo "temp/topics.json exist: ${{ steps.check_file.outputs.TOPICS_FILE_EXIST }}"
+
+      - name: Send Topics to Firebase
+        if: steps.check_file.outputs.TOPICS_FILE_EXIST == 'true'
+        run: yarn firebase
+        env:
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_PRIVATE_KEY_ID: ${{ secrets.FIREBASE_PRIVATE_KEY_ID }}
+          FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
+          FIREBASE_DATABASE_URL: ${{ secrets.FIREBASE_DATABASE_URL }}
+          FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}

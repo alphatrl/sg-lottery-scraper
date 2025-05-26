@@ -8,6 +8,11 @@ on:
         type: boolean
         default: true
         description: 'Send push notification after scraping'
+      skip_notification_check:
+        required: false
+        type: boolean
+        default: true
+        description: 'Skip notification check fo testing purposes'
 
 jobs:
   general-setup:
@@ -15,6 +20,7 @@ jobs:
     timeout-minutes: 5
     outputs:
       send_notification: ${{ steps.send_notification.outputs.SEND_NOTIFICATION }}
+      skip_notification_check: ${{ steps.send_notification.outputs.SKIP_NOTIFICATION_CHECK }}
     steps:
       - uses: actions/checkout@v4
       - name: Get send_notification variable
@@ -25,8 +31,17 @@ jobs:
           else
             echo "SEND_NOTIFICATION=true" >> $GITHUB_OUTPUT
           fi
+      - name: Get skip_notification_check variable
+        id: skip_notification_check
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "SKIP_NOTIFICATION_CHECK=${{ inputs.skip_notification_check }}" >> $GITHUB_OUTPUT
+          else
+            echo "SKIP_NOTIFICATION_CHECK=true" >> $GITHUB_OUTPUT
+          fi
       - run: |
           echo "NOTIFICATION ENABLED: ${{ steps.send_notification.outputs.SEND_NOTIFICATION }}"
+          echo "SKIP NOTIFICATION CHECK: ${{ steps.skip_notification_check.outputs.SKIP_NOTIFICATION_CHECK }}"
 
   scrape-singapore:
     needs:
@@ -36,6 +51,7 @@ jobs:
     with:
       node_env: staging
       branch_name: ${{ github.sha }}
+      skip_notification_check: ${{ needs.general-setup.outputs.skip_notification_check }}
 
   publish-test:
     runs-on: ubuntu-latest
@@ -56,42 +72,11 @@ jobs:
       - name: Track file changes with git
         run: git status
 
-  send-push-notification:
-    runs-on: ubuntu-latest
-    if: needs.general-setup.outputs.send_notification == 'true'
+  send-push-notifications:
     needs:
       - general-setup
       - scrape-singapore
       - publish-test
-    steps:      
-      - uses: actions/checkout@v4
-      - name: Install dependencies
-        uses: './.github/actions/install-project-dependencies'
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: topics-${{ github.run_id }}
-          path: temp
-      - name: Check if `topics.json` exist
-        id: check_file
-        run: |
-          if [ -f "temp/topics.json" ]; then
-            echo "TOPICS_FILE_EXIST=true" >> $GITHUB_OUTPUT
-            ls -l temp
-          else
-            echo "TOPICS_FILE_EXIST=false" >> $GITHUB_OUTPUT
-            ls -l
-          fi
-      - run: |
-          echo "temp/topics.json exist: ${{ steps.check_file.outputs.TOPICS_FILE_EXIST }}"
-
-      - name: Send Push Notification
-        if: steps.check_file.outputs.TOPICS_FILE_EXIST == 'true'
-        run: yarn firebase
-        env:
-          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-          FIREBASE_PRIVATE_KEY_ID: ${{ secrets.FIREBASE_PRIVATE_KEY_ID }}
-          FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
-          FIREBASE_DATABASE_URL: ${{ secrets.FIREBASE_DATABASE_URL }}
-          FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+    uses: './.github/workflows/send-push-notifications.yml'
+    if: needs.general-setup.outputs.send_notification == 'true'
+    secrets: inherit
