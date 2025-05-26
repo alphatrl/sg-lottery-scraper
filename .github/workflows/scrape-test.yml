@@ -9,7 +9,7 @@ on:
         default: true
         description: 'Send push notification after scraping'
       skip_notification_check:
-        required: false
+        required: true
         type: boolean
         default: true
         description: 'Skip notification check for testing purposes'
@@ -37,9 +37,10 @@ jobs:
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             echo "SKIP_NOTIFICATION_CHECK=${{ inputs.skip_notification_check }}" >> $GITHUB_OUTPUT
           else
-            echo "SKIP_NOTIFICATION_CHECK=true" >> $GITHUB_OUTPUT
+            echo "SKIP_NOTIFICATION_CHECK=false" >> $GITHUB_OUTPUT
           fi
-      - run: |
+      - name: Check variables
+        run: |
           echo "NOTIFICATION ENABLED: ${{ steps.send_notification.outputs.SEND_NOTIFICATION }}"
           echo "SKIP NOTIFICATION CHECK: ${{ steps.skip_notification_check.outputs.SKIP_NOTIFICATION_CHECK }}"
 
