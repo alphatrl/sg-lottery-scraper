@@ -10,7 +10,10 @@ on:
         required: false
         type: string
         default: production
-
+      skip_notification_check:
+        required: false
+        type: boolean
+        default: false
 
 jobs:    
   scrape:
@@ -29,6 +32,7 @@ jobs:
           NODE_ENV: ${{ inputs.node_env }}
           SERVER_URL: ${{ secrets.SERVER_URL }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          SKIP_NOTIFICATION_CHECK: ${{ inputs.skip_notification_check}}
         run: yarn start
 
       - name: Upload Lottery Results
