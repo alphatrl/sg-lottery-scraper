@@ -151,5 +151,5 @@ dist
 
 # Temp
 temp
-output
+data
 node_modules
