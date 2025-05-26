@@ -12,7 +12,7 @@ on:
         required: false
         type: boolean
         default: true
-        description: 'Skip notification check fo testing purposes'
+        description: 'Skip notification check for testing purposes'
 
 jobs:
   general-setup:
