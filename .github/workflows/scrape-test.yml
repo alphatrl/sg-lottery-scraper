@@ -52,7 +52,7 @@ jobs:
     with:
       node_env: staging
       branch_name: ${{ github.sha }}
-      skip_notification_check: ${{ needs.general-setup.outputs.skip_notification_check }}
+      skip_notification_check: ${{ needs.general-setup.outputs.skip_notification_check }} == 'true'
 
   publish-test:
     runs-on: ubuntu-latest
