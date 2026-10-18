@@ -1,5 +1,12 @@
 # SG-Lottery-Scraper
 
+> [!IMPORTANT]
+> **This project is archived and no longer maintained.**
+>
+> As of October 2026, this repository is read-only. No further updates, bug fixes, or
+> dependency upgrades will be made, and the scraper may stop working if the source website
+> changes. The code remains available for reference under the MIT license.
+
 ## Setup
 
 ```bash
